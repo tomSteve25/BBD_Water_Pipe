@@ -17,6 +17,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('redo', 'assets/redo.png');
         this.load.image('info', 'assets/info.png');
         this.load.image('HowTo', 'assets/HowTo.png');
+        this.load.image('bin', 'assets/trash.png')
 
         this.load.image('SOURCE', 'assets/start.png');
         this.load.image('END', 'assets/end.png');
@@ -45,19 +46,24 @@ class GameScene extends Phaser.Scene {
     generateLevel(this, CURRENT_LEVEL);
 
     //run button
-    var runBtn = this.add.image(RIGHTEDGE-CELL_WIDTH,OFFSET, 'run').setOrigin(0,0);
+    var runBtn = this.add.image(RIGHTEDGE-CELL_WIDTH - 20,OFFSET, 'run').setOrigin(0,0);
     runBtn.setInteractive();
-    runBtn.setScale(0.08);
+    runBtn.setScale(0.14);
 
     //redo button
-    var redoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH,OFFSET*2, 'redo').setOrigin(0,0);
+    var redoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH + 25,OFFSET*3, 'redo').setOrigin(0,0);
     redoBtn.setInteractive();
     redoBtn.setScale(0.08);
 
     //info button
-    var infoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH, OFFSET*4, 'info').setOrigin(0,0);
+    var infoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH + 25, OFFSET*6, 'info').setOrigin(0,0);
     infoBtn.setInteractive();
     infoBtn.setScale(2);
+
+    //bin button
+    var binBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET, OFFSET, 'bin').setOrigin(0,0);
+    binBtn.setInteractive();
+    binBtn.setScale(0.05);
 
     //How to
     var howTo = this.add.image(0, 0, 'HowTo').setOrigin(0,0).setVisible(false);
@@ -88,15 +94,34 @@ class GameScene extends Phaser.Scene {
         drag_triggered = false;
         let x = (gameObject.x/CELL_WIDTH)-1;
         let y = (gameObject.y/CELL_WIDTH)-1;
+        let prev_y = (previous_position[1]/CELL_WIDTH)-1;
         let kind = getKind(gameObject);
         let direction = getDirection(gameObject.angle);
         console.log("GAME OBJECT Y IS: ",gameObject.y);
      
 
+        // x:13 y:0
         if (y === 0 || gameObject.x < CELL_WIDTH || gameObject.x > 700 || gameObject.y > 750){
-            gameObject.x = previous_position[0];
-            gameObject.y = previous_position[1];
-            grid[previous_y][previous_x] = new GameEntity(kind, 1, direction, {y: y, x: x});
+            
+            //Check if object is being deleted
+            if (x === 13 && y === 0) {
+                console.log("ITEM BINNED");
+                // gameObject.disableInteractive();
+                // gameObject.setVisible(false);
+                if(prev_y != 0){
+                    console.log(gameObject);
+                    AVAILABLE_OBJECTS[kind] += 1;
+                };
+                
+                // TODO: Add sprite or something...
+
+                gameObject.destroy();
+            } else {
+                gameObject.x = previous_position[0];
+                gameObject.y = previous_position[1];
+                grid[previous_y][previous_x] = new GameEntity(kind, 1, direction, {y: y, x: x});
+            };
+            
         }else if (grid[y][x] != null){
             //returns the pipe to its previous position
             gameObject.x = previous_position[0];

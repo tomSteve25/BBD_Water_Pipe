@@ -19,7 +19,7 @@ const ObjectType = {
 var LEVELS = {
 	numberOFLevels:3,
 	"1":{
-		SOURCE:{y:2,x:4},
+		SOURCE:{y:1,x:1},
 		END:{y:6,x:6},
 		WATER_PURITY_LEVEL:0,
 		IMMOVABLES:[],
