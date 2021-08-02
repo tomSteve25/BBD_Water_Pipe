@@ -12,14 +12,14 @@ To run the game:
     - Water storage -> changes water source position -> can reuse pipes
     
 * Control Flow
-    - Done
+    - Getting there
 
 * Functions
     - Abstraction pipes
     - Limit space
 
 * Data types and their basic operations / comparisons
-    - Done
+    - Mixed dirty water
 
 ## Scoring
 
