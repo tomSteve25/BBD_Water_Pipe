@@ -30,6 +30,8 @@ class GameScene extends Phaser.Scene {
         this.load.image('DOUBLELEFT', 'assets/doublepipe_left.png');
         this.load.image('DOUBLERIGHT', 'assets/doublepipe_right.png');
         this.load.image('PURIFIER', 'assets/purify.png');
+        this.load.image('FURNACE', 'assets/furnace.png')
+        this.load.image('COOLER', 'assets/cooler.png')
         this.load.image('FUNCTIONBLOCK', 'assets/function.png');
         this.load.image('FUNCTIONCALL', 'assets/functioncall.png');
         //console.log("GameScene starts");
@@ -114,8 +116,7 @@ class GameScene extends Phaser.Scene {
                 };
                 
                 // TODO: Add sprite or something...
-
-                gameObject.destroy();
+                
             } else {
                 gameObject.x = previous_position[0];
                 gameObject.y = previous_position[1];
@@ -138,16 +139,17 @@ class GameScene extends Phaser.Scene {
                 
             }
 
-            // on release of block the source block temp goes up
-            const currObject = grid[3][3];
-            temp = currObject.phase();
-            console.log("Current temp: " + temp);
-            //currObject.
+            // // on release of block the source block temp goes up
+            // console.log(grid[3][3]);
+
+            // let temp = grid[3][3].phase;
+            // console.log("Current temp: " + temp);
+            // //currObject.
             
         } 
-        let result = simulate(grid, {y: start_y, x: start_x});
-        console.log(result.message)
-        update_text(result);
+        // let result = simulate(grid, {y: start_y, x: start_x});
+        // console.log(result.message)
+        // update_text(result);
         
     });
     
@@ -166,19 +168,19 @@ class GameScene extends Phaser.Scene {
         }
         else if (gameObject.texture.key === 'run'){
             let result = simulate(grid, {y: start_y, x: start_x});
-            if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
-                this.scene.start('WinScene');
-            }else if (result.outcome){
-                //move on to the next level
-                CURRENT_LEVEL ++;
-                //do some fancy animation
-                //restart scene
-                update_text(result);
-                grid = create_grid();
-                this.registry.destroy(); // destroy registry
-                this.events.off(); // disable all active events
-                this.scene.restart('GameScene') // restart current scene
-            }
+            // if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
+            //    this.scene.start('WinScene');
+            // }else if (result.outcome){
+            //     //move on to the next level
+            //     CURRENT_LEVEL ++;
+            //     //do some fancy animation
+            //     //restart scene
+            //     update_text(result);
+            //     grid = create_grid();
+            //     this.registry.destroy(); // destroy registry
+            //     this.events.off(); // disable all active events
+            //     this.scene.restart('GameScene') // restart current scene
+            // }
             alert(result.message);
             
         }else if (gameObject.texture.key === 'redo'){
@@ -236,7 +238,7 @@ function create_sprites(context, number, type) {
             break;
         case ObjectType.BENDLEFT:
             for (var i = 0; i < number; i++){
-                var bend_left = context.add.sprite(CELL_WIDTH*3, CELL_WIDTH, 'BENDLEFT').setInteractive();
+                var bend_left = context.add.sprite(CELL_WIDTH*2, CELL_WIDTH, 'BENDLEFT').setInteractive();
                 bend_left.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(bend_left);
                 //partsGroup.add(bend_left);
@@ -244,7 +246,7 @@ function create_sprites(context, number, type) {
             break;
         case ObjectType.BENDRIGHT:
             for (var i = 0; i < number; i++){
-                var bend_right = context.add.sprite(CELL_WIDTH*5, CELL_WIDTH, 'BENDRIGHT').setInteractive();
+                var bend_right = context.add.sprite(CELL_WIDTH*3, CELL_WIDTH, 'BENDRIGHT').setInteractive();
                 bend_right.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(bend_right);
                 //partsGroup.add(bend_right);
@@ -252,7 +254,7 @@ function create_sprites(context, number, type) {
             break;
         case ObjectType.CHECKPIPE:
             for (var i = 0; i < number; i++){
-                var check_pipe = context.add.sprite(CELL_WIDTH*7, CELL_WIDTH, 'CHECKPIPE').setInteractive();
+                var check_pipe = context.add.sprite(CELL_WIDTH*4, CELL_WIDTH, 'CHECKPIPE').setInteractive();
                 check_pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(check_pipe);
                 //partsGroup.add(check_pipe);
@@ -260,7 +262,7 @@ function create_sprites(context, number, type) {
             break;
         case ObjectType.DOUBLEDUAL:
             for (var i = 0; i < number; i++){
-                var double_pipe_dual = context.add.sprite(CELL_WIDTH*9, CELL_WIDTH, 'DOUBLEDUAL').setInteractive();
+                var double_pipe_dual = context.add.sprite(CELL_WIDTH*5, CELL_WIDTH, 'DOUBLEDUAL').setInteractive();
                 double_pipe_dual.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(double_pipe_dual);
                 //partsGroup.add(double_pipe_dual);
@@ -268,7 +270,7 @@ function create_sprites(context, number, type) {
             break;
         case ObjectType.DOUBLELEFT:
             for (var i = 0; i < number; i++){
-                var double_pipe_left = context.add.sprite(CELL_WIDTH*11, CELL_WIDTH, 'DOUBLELEFT').setInteractive();
+                var double_pipe_left = context.add.sprite(CELL_WIDTH*6, CELL_WIDTH, 'DOUBLELEFT').setInteractive();
                 double_pipe_left.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(double_pipe_left);
                 //partsGroup.add(double_pipe_left);
@@ -276,7 +278,7 @@ function create_sprites(context, number, type) {
             break;
         case ObjectType.DOUBLERIGHT:
             for (var i = 0; i < number; i++){
-                var double_pipe_right = context.add.sprite(CELL_WIDTH*13, CELL_WIDTH, 'DOUBLERIGHT').setInteractive();
+                var double_pipe_right = context.add.sprite(CELL_WIDTH*7, CELL_WIDTH, 'DOUBLERIGHT').setInteractive();
                 double_pipe_right.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(double_pipe_right);
                 //partsGroup.add(double_pipe_right);
@@ -284,10 +286,26 @@ function create_sprites(context, number, type) {
             break;
         case ObjectType.PURIFIER:
             for (var i = 0; i < number; i++){
-                var purifier = context.add.sprite(CELL_WIDTH*15, CELL_WIDTH, 'PURIFIER').setInteractive();
+                var purifier = context.add.sprite(CELL_WIDTH*8, CELL_WIDTH, 'PURIFIER').setInteractive();
                 purifier.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(purifier);
                 //partsGroup.add(purifier);
+            }
+            break;
+        case ObjectType.FURNACE:
+            for (var i = 0; i < number; i++){
+                var furnace = context.add.sprite(CELL_WIDTH*9, CELL_WIDTH, 'FURNACE').setInteractive();
+                furnace.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                context.input.setDraggable(furnace);
+                //partsGroup.add(furnace);
+            }
+            break;
+        case ObjectType.COOLER:
+            for (var i = 0; i < number; i++){
+                var cooler = context.add.sprite(CELL_WIDTH*10, CELL_WIDTH, 'COOLER').setInteractive();
+                cooler.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                context.input.setDraggable(cooler);
+                //partsGroup.add(furnace);
             }
             break;
         //MISSING: functionblock and functioncal
@@ -356,6 +374,12 @@ function getImageID(type){
         case ObjectType.PURIFIER:
             return 'PURIFIER'
             break;
+        case ObjectType.FURNACE:
+            return 'FURNACE'
+            break;
+        case ObjectType.COOLER:
+            return 'COOLER'
+            break;
         case ObjectType.FUNCTIONBLOCK:
             return 'FUNCTIONBLOCK';
             break;
@@ -394,7 +418,7 @@ function generateLevel(context, current_level){
      start_y = (start.y/CELL_WIDTH)-1;
     var start_kind = getKind(start);
     var start_direction = getDirection(start.angle);
-    grid[start_y][start_x] = new GameEntity(start_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, WaterPhase.WATER, start_direction, {y: start_y, x: start_x});
+    grid[start_y][start_x] = new GameEntity(start_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, LEVELS[current_level_str].WATER_PHASE_LEVEL, start_direction, {y: start_y, x: start_x});
 
     //end
     var end = context.add.sprite((end_pos.x+1)*CELL_WIDTH, (end_pos.y+1)*CELL_WIDTH, 'END');
@@ -403,7 +427,7 @@ function generateLevel(context, current_level){
     const end_y = (end.y/CELL_WIDTH)-1;
     var end_kind = getKind(end);
     var end_direction = getDirection(start.angle);
-    grid[end_y][end_x] = new GameEntity(end_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, WaterPhase.WATER, start_direction, {y: end_y, x: end_x});
+    grid[end_y][end_x] = new GameEntity(end_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, LEVELS[current_level_str].WATER_PHASE_LEVEL, start_direction, {y: end_y, x: end_x});
 
     //game pieces
     for (var i = 0; i < movables.length; i++){
@@ -421,8 +445,8 @@ function generateLevel(context, current_level){
         createImmovables(context, type, y, x, direction);
     }
 
-    let result = simulate(grid, {y: start_y, x: start_x});
-    update_text(result.outcome);
+    // let result = simulate(grid, {y: start_y, x: start_x});
+    // update_text(result.outcome);
 
 }
 
@@ -457,6 +481,12 @@ function getKind(gameObject) {
             break;
         case 'PURIFIER':
             return ObjectType.PURIFIER;
+            break;
+        case 'FURNACE':
+            return ObjectType.FURNACE;
+            break;
+        case 'COOLER':
+            return ObjectType.COOLER;
             break;
         case 'FUNCTIONBLOCK':
             return ObjectType.FUNCTIONBLOCK;

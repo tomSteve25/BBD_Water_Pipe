@@ -16,6 +16,12 @@ const ObjectType = {
 	COOLER: 13
 }
 
+const errMsg = {
+	FROZEN: -1,
+	HEATDOWN: -2,
+	WATERUP: -3
+}
+
 
 function objectName(type)
 {
@@ -39,10 +45,10 @@ function objectName(type)
 			return "Double right pipe";
 		case ObjectType.PURIFIER:
 			return "Purifier";
-		case ObjectType.END:
-			return "End";
 		case ObjectType.FURNACE:
 			return "Furnace";
+		case ObjectType.END:
+			return "End";
 		case ObjectType.COOLER:
 			return "Cooler";
 	}
@@ -174,15 +180,64 @@ class GameEntity
 	set purity(purityLevel){ this.purity_ = purityLevel;}
 	get purity(){ return this.purity_;}
 	get phase(){ return this.phase_;}
-	set	phase(temp){ this.WaterPhase = temp;}
+	set	phase(temp){ this.phase_ = temp;}
 	
 	// Passes the water to an object 
+	// passWater(otherObject)
+	// {
+	// 	console.log("PassWater");
+	// 	console.log("Before:" + otherObject.purity);
+	// 	console.log("Before" + otherObject.phase);
+	// 	if (this.kind_ === ObjectType.PURIFIER){
+	// 		console.log("Purifying");
+			
+	// 		otherObject.purity = purifyWater(this.purity_);
+	// 		console.log("After:" + otherObject.purity);
+	// 	}
+	// 	else if (this.kind_ === ObjectType.FURNACE){
+	// 		console.log("Heating");
+			
+	// 		otherObject.phase = heatWater(this.phase_);
+	// 		console.log(otherObject.phase);
+	// 	}
+	// 	else if (this.kind_ === ObjectType.COOLER){
+	// 		console.log("Cooling");
+	// 		otherObject.phase = coolWater(this.phase_);
+	// 		console.log(otherObject.phase);
+	// 	}
+	// 	else {
+	// 		console.log("Normal Pipe")
+	// 		otherObject.purity = this.purity_;
+	// 		otherObject.phase = this.phase_;
+	// 	}
+	// }
+
 	passWater(otherObject)
 	{
-		if (this.kind_ === ObjectType.PURIFIER)
-			otherObject.purity = purifyWater(this.purity_);
-		else
-			otherObject.purity = this.purity_;
+		console.log("PassWater");
+		console.log("Before:" + otherObject.purity);
+		console.log("Before" + otherObject.phase);
+		if (this.kind_ === ObjectType.PURIFIER){
+			console.log("Purifying");
+			
+			this.purity_ = purifyWater(this.purity_);
+			console.log("After:" + this.purity_);
+		}
+		else if (this.kind_ === ObjectType.FURNACE){
+			console.log("Heating");
+			
+			this.phase_ = heatWater(this.phase_);
+			console.log("After:" + this.phase_);
+		}
+		else if (this.kind_ === ObjectType.COOLER){
+			console.log("Cooling");
+			this.phase_ = coolWater(this.phase_);
+			console.log("After: "+this.phase_);
+		}
+
+		console.log("Normal Pipe")
+		otherObject.purity = this.purity_;
+		otherObject.phase = this.phase_;
 	}
 	
 	get isMultipleInGrid()
@@ -222,6 +277,14 @@ class GameEntity
 	// Return the out-end points of an object 
 	outPos()
 	{
+		//Stops water if pipe frozen
+		// console.log(this);
+		if (this.phase_ === WaterPhase.ICE) {
+			console.log("Frozen - Catch all");
+			return errMsg.FROZEN;
+		}
+			
+
 		//outpos for SOURCE
 		if (this.kind_ == ObjectType.SOURCE)
 		{
@@ -265,11 +328,14 @@ class GameEntity
 		{
 			switch (this.faceDirection_){
 				case Direction.NORTH:
-					return [{
-						y: this.position_.y-1,
-						x: this.position_.x,
-						direction: this.faceDirection_
-					}]
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}];
+					else
+						return errMsg.WATERUP;
 				break;
 				case Direction.EAST:
 					return [{
@@ -279,11 +345,14 @@ class GameEntity
 					}] 
 				break;
 				case Direction.SOUTH:
-					return [{
-						y: this.position_.y+1,
-						x: this.position_.x,
-						direction: this.faceDirection_
-					}]
+					if (this.phase_ === WaterPhase.WATER){
+						return [{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: this.faceDirection_
+						}]
+					}
+					return errMsg.HEATDOWN
 				break;
 				case Direction.WEST:
 					return [{
@@ -301,11 +370,14 @@ class GameEntity
 		{
 			switch (this.faceDirection_){
 				case Direction.NORTH:
-					return [{
-						y: this.position_.y-1,
-						x: this.position_.x,
-						direction: this.faceDirection_
-					}]
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}]
+					else
+						return errMsg.WATERUP;
 				break;
 				case Direction.EAST:
 					return [{
@@ -315,11 +387,14 @@ class GameEntity
 					}] 
 				break;
 				case Direction.SOUTH:
-					return [{
-						y: this.position_.y+1,
-						x: this.position_.x,
-						direction: this.faceDirection_
-					}]
+					if (this.phase_ === WaterPhase.WATER)
+						return [{
+							y: this.position_.y+1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}]
+					else 
+						return errMsg.HEATDOWN;
 				break;
 				case Direction.WEST:
 					return [{
@@ -336,11 +411,14 @@ class GameEntity
 		{
 			switch (this.faceDirection_){
 				case Direction.NORTH:
-					return [{
-						y: this.position_.y-1,
-						x: this.position_.x,
-						direction: this.faceDirection_
-					}]
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}]
+					else
+						return errMsg.WATERUP;
 				break;
 				case Direction.EAST:
 					return [{
@@ -350,11 +428,14 @@ class GameEntity
 					}] 
 				break;
 				case Direction.SOUTH:
-					return [{
-						y: this.position_.y+1,
-						x: this.position_.x,
-						direction: this.faceDirection_
-					}]
+					if (this.phase_ === WaterPhase.WATER)
+						return [{
+							y: this.position_.y+1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}]
+					else
+						return errMsg.HEATDOWN;
 				break;
 				case Direction.WEST:
 					return [{
@@ -369,7 +450,8 @@ class GameEntity
 		}
 		else if (this.kind_ == ObjectType.CHECKPIPE)
 		{
-			if (this.purity_ === PurityLevel.CLEAN){
+			console.log(this);
+			if (this.purity_ == PurityLevel.CLEAN){
 				switch (this.faceDirection_){
 					case Direction.NORTH:
 						return [{
@@ -379,11 +461,14 @@ class GameEntity
 						}]
 					break;
 					case Direction.EAST:
-						return [{
-							y: this.position_.y-1,
-							x: this.position_.x,
-							direction: Direction.NORTH
-						}] 
+						if (this.phase_ === WaterPhase.STEAM) 
+							return [{
+								y: this.position_.y-1,
+								x: this.position_.x,
+								direction: Direction.NORTH
+							}] 
+						else
+							return errMsg.WATERUP;
 					break;
 					case Direction.SOUTH:
 						return [{
@@ -393,11 +478,14 @@ class GameEntity
 						}]
 					break;
 					case Direction.WEST:
-						return [{
-							y: this.position_.y+1,
-							x: this.position_.x,
-							direction: Direction.SOUTH
-						}]
+						if(this.phase === WaterPhase.WATER)
+							return [{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: Direction.SOUTH
+							}]
+						else
+							return errMsg.HEATDOWN;
 					break;
 					default:
 						//
@@ -412,11 +500,14 @@ class GameEntity
 						}]
 					break;
 					case Direction.EAST:
-						return [{
-							y: this.position_.y+1,
-							x: this.position_.x,
-							direction: Direction.SOUTH
-						}] 
+						if (this.phase_ === WaterPhase.WATER)
+							return [{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: Direction.SOUTH
+							}] 
+						else
+							return errMsg.HEATDOWN;
 					break;
 					case Direction.SOUTH:
 						return [{
@@ -426,11 +517,14 @@ class GameEntity
 						}]
 					break;
 					case Direction.WEST:
-						return [{
-							y: this.position_.y-1,
-							x: this.position_.x,
-							direction: Direction.NORTH
-						}]
+						if(this.phase_ === WaterPhase.STEAM)
+							return [{
+								y: this.position_.y-1,
+								x: this.position_.x,
+								direction: Direction.NORTH
+							}]
+						else
+							return errMsg.WATERUP;
 					break;
 					default:
 						//
@@ -455,18 +549,27 @@ class GameEntity
 				break;
 				case Direction.EAST:
 					console.log("EAST")
-					return [
-						{
-							y: this.position_.y+1,
-							x: this.position_.x,
-							direction: Direction.SOUTH
-						},
-						{
-						y: this.position_.y-1,
-						x: this.position_.x,
-						direction: Direction.NORTH
+					if (this.phase_ === WaterPhase.WATER)
+						return [
+							{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: Direction.SOUTH
+							// },
+							// errMsg.WATERUP
+						}
+						]
+					else if (this.phase_ === WaterPhase.STEAM){
+						return [
+							{
+								y: this.position_.y-1,
+								x: this.position_.x,
+								direction: Direction.NORTH
+							// },
+							// errMsg.HEATDOWN
+							}
+						]
 					}
-					]
 				break;
 				case Direction.SOUTH:
 					return [{
@@ -481,16 +584,25 @@ class GameEntity
 					}]
 				break;
 				case Direction.WEST:
-					return [{
-						y: this.position_.y-1,
-						x: this.position_.x,
-						direction: Direction.NORTH
-					},
-					{
-						y: this.position_.y+1,
-						x: this.position_.x,
-						direction: Direction.SOUTH
-					}]
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: Direction.NORTH
+							// },
+							// errMsg.HEATDOWN
+							}
+						]
+					else if (this.phase_ === WaterPhase.WATER){
+						return [{
+							y: this.position_.y+1,
+							x: this.position_.x,
+							direction: Direction.SOUTH
+							// },
+							// errMsg.WATERUP
+							}
+						]
+					}
 				break;
 				default:
 					//
@@ -507,11 +619,14 @@ class GameEntity
 					}]
 				break;
 				case Direction.EAST:
-					return [{
-						y: this.position_.y+1,
-						x: this.position_.x,
-						direction: Direction.NORTH
-					}] 
+					if(this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: Direction.NORTH
+						}]
+					else
+						return	errMsg.WATERUP;
 				break;
 				case Direction.SOUTH:
 					return [{
@@ -521,11 +636,14 @@ class GameEntity
 					}]
 				break;
 				case Direction.WEST:
-					return [{
-						y: this.position_.y+1,
-						x: this.position_.x,
-						direction: Direction.SOUTH
-					}]
+					if (this.phase_ === WaterPhase.WATER)
+						return [{
+							y: this.position_.y+1,
+							x: this.position_.x,
+							direction: Direction.SOUTH
+						}]
+					else
+						return errMsg.HEATDOWN;
 				break;
 				default:
 					//
@@ -542,11 +660,14 @@ class GameEntity
 					}]
 				break;
 				case Direction.EAST:
-					return [{
-						y: this.position_.y+1,
-						x: this.position_.x,
-						direction: Direction.SOUTH
-					}] 
+					if(this.phase_ === WaterPhase.WATER)
+						return [{
+							y: this.position_.y+1,
+							x: this.position_.x,
+							direction: Direction.SOUTH
+						}] 
+					else
+						return errMsg.HEATDOWN;
 				break;
 				case Direction.SOUTH:
 					return [{
@@ -556,11 +677,14 @@ class GameEntity
 					}]
 				break;
 				case Direction.WEST:
-					return [{
-						y: this.position_.y-1,
-						x: this.position_.x,
-						direction: Direction.NORTH
-					}]
+					if(this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: Direction.NORTH
+						}]
+					else
+						return errMsg.WATERUP;
 				break;
 				default:
 					//
@@ -570,11 +694,14 @@ class GameEntity
 		{
 			switch (this.faceDirection_){
 				case Direction.NORTH:
-					return [{
-						y: this.position_.y-1,
-						x: this.position_.x,
-						direction: this.faceDirection_
-					}]
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}];
+					else
+						return errMsg.WATERUP;
 				break;
 				case Direction.EAST:
 					return [{
@@ -584,11 +711,95 @@ class GameEntity
 					}] 
 				break;
 				case Direction.SOUTH:
+					if (this.phase_ === WaterPhase.WATER){
+						return [{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: this.faceDirection_
+						}]
+					}
+					return errMsg.HEATDOWN
+				break;
+				case Direction.WEST:
 					return [{
-						y: this.position_.y+1,
-						x: this.position_.x,
+						y: this.position_.y,
+						x: this.position_.x-1,
 						direction: this.faceDirection_
 					}]
+				break;
+				default:
+					//
+			}
+		}
+		else if (this.kind == ObjectType.FURNACE)
+		{
+			switch (this.faceDirection_){
+				case Direction.NORTH:
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}];
+					else
+						return errMsg.WATERUP;
+				break;
+				case Direction.EAST:
+					return [{
+						y: this.position_.y,
+						x: this.position_.x+1,
+						direction: this.faceDirection_
+					}] 
+				break;
+				case Direction.SOUTH:
+					if (this.phase_ === WaterPhase.WATER){
+						return [{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: this.faceDirection_
+						}]
+					}
+					return errMsg.HEATDOWN
+				break;
+				case Direction.WEST:
+					return [{
+						y: this.position_.y,
+						x: this.position_.x-1,
+						direction: this.faceDirection_
+					}]
+				break;
+				default:
+			}
+		}
+		else if (this.kind == ObjectType.COOLER)
+		{
+			switch (this.faceDirection_){
+				case Direction.NORTH:
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}];
+					else
+						return errMsg.WATERUP;
+				break;
+				case Direction.EAST:
+					return [{
+						y: this.position_.y,
+						x: this.position_.x+1,
+						direction: this.faceDirection_
+					}] 
+				break;
+				case Direction.SOUTH:
+					if (this.phase_ === WaterPhase.WATER){
+						return [{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: this.faceDirection_
+						}]
+					}
+					return errMsg.HEATDOWN
 				break;
 				case Direction.WEST:
 					return [{
@@ -726,6 +937,31 @@ class GameEntity
 			}
 				break;
 
+			case ObjectType.FURNACE:
+				{
+					if (faceDirection === Direction.NORTH)
+						return Direction.NORTH;
+					else if (faceDirection === Direction.SOUTH)
+						return Direction.SOUTH;
+					else if (faceDirection === Direction.WEST)
+						return Direction.WEST;
+					else if (faceDirection === Direction.EAST)
+						return Direction.EAST;
+				}
+					break;
+			case ObjectType.COOLER:
+				{
+					if (faceDirection === Direction.NORTH)
+						return Direction.NORTH;
+					else if (faceDirection === Direction.SOUTH)
+						return Direction.SOUTH;
+					else if (faceDirection === Direction.WEST)
+						return Direction.WEST;
+					else if (faceDirection === Direction.EAST)
+						return Direction.EAST;
+				}
+					break;
+
 			//Not yet implemented
 			case ObjectType.FUNCTIONBLOCK:
 			{
@@ -779,6 +1015,11 @@ function simulate(grid, currPos)
 {
 	const currObject = grid[currPos.y][currPos.x];
 
+	// if (currPos.y === 0 && currPos.x === 18){
+	// 	console.log("NEW ERROR TRIGGERED")
+	// 	return {outcome:false, message:"0 error", err:"18 error"};
+	// }
+
 	if (currObject.kind == ObjectType.SOURCE)
 		resetTravereCount(grid);
 
@@ -786,7 +1027,10 @@ function simulate(grid, currPos)
 
 	if (currObject.traversed > 20)
 	{
-		return {outcome:false, message:"The water is going in circles and do not reaching the end.", err:"The water is going in circles and do not reaching the end."};
+		if(!currObject.hasCleanWater)
+			return {outcome:false, message:"Dirty water stuck in a loop.", err:"Dirty water stuck in a loop."}
+		else
+			return {outcome:false, message:"Water is in a loop (" + currPos.x + ", " + currPos.y + ")", err:"Water is in a loop (" + currPos.x + ", " + currPos.y + ")"};
 	}
 
 	// Checking if we have reached the destination
@@ -800,8 +1044,21 @@ function simulate(grid, currPos)
 	}
 	
 	// Otherwise if it is not the end we try move to the next position(s) connected to by the current object
-	const connectedPos = currObject.outPos();
-	
+	const connectedPos = currObject.outPos(); //maybe selecting wrong out
+
+	if (connectedPos === errMsg.FROZEN) {
+		let err = `Water is frozen (` + currPos.x + `, ` + currPos.y + `)`;
+		return {outcome:false, message:`Water is frozen.`, err};
+	}
+	else if (connectedPos === errMsg.HEATDOWN){
+		let err = `Steam cannot move down (` + currPos.x + `, ` + currPos.y + `)`;
+		return {outcome:false, message:`Steam cannot move down .`, err};
+	}
+	else if (connectedPos === errMsg.WATERUP){
+		let err = `Water cannot flow up (` + currPos.x + `, ` + currPos.y + `)`
+		return {outcome:false, message:`Water cannot flow up.`, err};
+	}
+
 	let result; 
 	for (let i = 0; i < connectedPos.length; i++)
 	{

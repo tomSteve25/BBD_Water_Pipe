@@ -17,11 +17,31 @@ const ObjectType = {
 
 
 var LEVELS = {
-	numberOFLevels:3,
+	numberOFLevels:6,
+	// "1":{
+	// 	SOURCE:{y:3,x:3},
+	// 	END:{y:6,x:6},
+	// 	WATER_PURITY_LEVEL:1,
+	// 	WATER_PHASE_LEVEL:1,
+	// 	IMMOVABLES:[],
+	// 	MOVABLES:[
+	// 		{type:ObjectType.PURIFIER,quantity:2},
+	// 		{type:ObjectType.FURNACE,quantity:5},
+	// 		{type:ObjectType.COOLER,quantity:5},
+	// 		{type:ObjectType.PIPE,quantity:5},
+	// 		{type:ObjectType.BENDRIGHT,quantity:5},
+	// 		{type:ObjectType.BENDLEFT,quantity:5},
+	// 		{type:ObjectType.DOUBLELEFT,quantity:1},
+	// 		{type:ObjectType.DOUBLERIGHT,quantity:1},
+	// 		{type:ObjectType.DOUBLEDUAL,quantity:1},
+	// 		{type:ObjectType.CHECKPIPE, quantity:1}
+	// 	]
+	// },
 	"1":{
 		SOURCE:{y:3,x:3},
 		END:{y:6,x:6},
 		WATER_PURITY_LEVEL:0,
+		WATER_PHASE_LEVEL: 1,
 		IMMOVABLES:[],
 		MOVABLES:[
 			{type:ObjectType.PIPE,quantity:5},
@@ -45,11 +65,12 @@ var LEVELS = {
 	
 	},
 	"3":{
-		SOURCE:{y:7,x:7},
-		END:{y:8,x:11},
+		SOURCE:{y:7,x:3},
+		END:{y:10,x:11},
 		WATER_PURITY_LEVEL:3,
+		WATER_PHASE_LEVEL:1,
 		IMMOVABLES:[
-			{type:ObjectType.CHECKPIPE, y: 7, x:10, direction: Direction.WEST}
+			{type:ObjectType.CHECKPIPE, y: 7, x:10, direction: Direction.SOUTH}
 		],
 		MOVABLES:[
 			{type:ObjectType.PURIFIER,quantity:1},
@@ -59,16 +80,27 @@ var LEVELS = {
 			{type:ObjectType.DOUBLELEFT,quantity:1},
 			{type:ObjectType.DOUBLERIGHT,quantity:1},
 			{type:ObjectType.DOUBLEDUAL,quantity:1},
+			{type:ObjectType.FURNACE,quantity:5},
+			{type:ObjectType.COOLER,quantity:5}
 		]
 	
 	},
 	"4":{ // Temperature level
 		SOURCE:{y:7,x:7}, 
-		END:{y:7,x:12},
-		WATER_PURITY_LEVEL:0,
+		END:{y:7,x:10},
+		WATER_PURITY_LEVEL:2,
+		WATER_PHASE_LEVEL:2,
 		IMMOVABLES:[],
 		MOVABLES:[
-			{type:ObjectType.PIPE,quantity:10}
+			{type:ObjectType.PURIFIER,quantity:5},
+			{type:ObjectType.PIPE,quantity:10},
+			{type:ObjectType.BENDRIGHT,quantity:6},
+			{type:ObjectType.BENDLEFT,quantity:6},
+			{type:ObjectType.DOUBLELEFT,quantity:1},
+			{type:ObjectType.DOUBLERIGHT,quantity:1},
+			{type:ObjectType.DOUBLEDUAL,quantity:1},
+			{type:ObjectType.FURNACE,quantity:5},
+			{type:ObjectType.COOLER,quantity:5}
 		]
 	
 	},
