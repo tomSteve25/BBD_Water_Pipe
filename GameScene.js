@@ -119,7 +119,7 @@ class GameScene extends Phaser.Scene {
             } else {
                 gameObject.x = previous_position[0];
                 gameObject.y = previous_position[1];
-                grid[previous_y][previous_x] = new GameEntity(kind, 1, direction, {y: y, x: x});
+                grid[previous_y][previous_x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             };
             
         }else if (grid[y][x] != null){
@@ -127,16 +127,22 @@ class GameScene extends Phaser.Scene {
             gameObject.x = previous_position[0];
             gameObject.y = previous_position[1];
             //console.log(previous_x, previous_y);
-            grid[previous_y][previous_x] = new GameEntity(kind, 1, direction, {y: y, x: x});
+            grid[previous_y][previous_x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
         }else{
             //sets the new grid position as true (i.e. occupied)
-            grid[y][x] = new GameEntity(kind, 1, direction, {y: y, x: x});
+            grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             
             if (previous_y === 0){
                 AVAILABLE_OBJECTS[kind] -= 1;
                 
                 
             }
+
+            // on release of block the source block temp goes up
+            const currObject = grid[3][3];
+            temp = currObject.phase();
+            console.log("Current temp: " + temp);
+            //currObject.
             
         } 
         let result = simulate(grid, {y: start_y, x: start_x});
@@ -299,7 +305,7 @@ function createImmovables(context, type, y, x, direction){
     obj_x = (obj.x/CELL_WIDTH)-1;
     obj_y = (obj.y/CELL_WIDTH)-1;
     var obj_direction = direction;
-    grid[obj_y][obj_x] = new GameEntity(type, PurityLevel.CLEAN, obj_direction, {y: obj_y, x: obj_x});
+    grid[obj_y][obj_x] = new GameEntity(type, PurityLevel.CLEAN, WaterPhase.WATER, obj_direction, {y: obj_y, x: obj_x});
 }
 
 function getAngle(direction){
@@ -388,7 +394,7 @@ function generateLevel(context, current_level){
      start_y = (start.y/CELL_WIDTH)-1;
     var start_kind = getKind(start);
     var start_direction = getDirection(start.angle);
-    grid[start_y][start_x] = new GameEntity(start_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, start_direction, {y: start_y, x: start_x});
+    grid[start_y][start_x] = new GameEntity(start_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, WaterPhase.WATER, start_direction, {y: start_y, x: start_x});
 
     //end
     var end = context.add.sprite((end_pos.x+1)*CELL_WIDTH, (end_pos.y+1)*CELL_WIDTH, 'END');
@@ -397,7 +403,7 @@ function generateLevel(context, current_level){
     const end_y = (end.y/CELL_WIDTH)-1;
     var end_kind = getKind(end);
     var end_direction = getDirection(start.angle);
-    grid[end_y][end_x] = new GameEntity(end_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, start_direction, {y: end_y, x: end_x});
+    grid[end_y][end_x] = new GameEntity(end_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, WaterPhase.WATER, start_direction, {y: end_y, x: end_x});
 
     //game pieces
     for (var i = 0; i < movables.length; i++){

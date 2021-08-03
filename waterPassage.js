@@ -141,11 +141,12 @@ function coolWater(level)
 // For game objects  
 class GameEntity
 {
-	constructor(kind, purity, faceDirection, position)
+	constructor(kind, purity, phase, faceDirection, position)
 	{
 		this.kind_ = kind;
 		this.purity_ = purity;
-		this.faceDirection_  = faceDirection
+		this.phase = phase;
+		this.faceDirection_  = faceDirection;
 		this.position_ = position;
 		this.inGrid_ = GameEntity.getInGrid(kind, faceDirection);
 		this.traversed_ = 0;
@@ -156,6 +157,14 @@ class GameEntity
 		return this.purity_ === PurityLevel.CLEAN
 	}
 
+	get isSteam(){
+		return this.phase === WaterPhase.STEAM;
+	}
+
+	get isIce(){
+		return this.phase === WaterPhase.ICE;
+	}
+
 	get traversed() {return this.traversed_;}
 	increaseTraversed() {this.traversed_++;}
 	resetTraversed() {this.traversed_ = 0}
@@ -164,6 +173,8 @@ class GameEntity
 	get kind(){ return this.kind_;}
 	set purity(purityLevel){ this.purity_ = purityLevel;}
 	get purity(){ return this.purity_;}
+	get phase(){ return this.phase_;}
+	set	phase(temp){ this.WaterPhase = temp;}
 	
 	// Passes the water to an object 
 	passWater(otherObject)
@@ -763,6 +774,7 @@ function resetTravereCount(grid)
 }
 
 // Checks if water from the given point reaches to the end CLEAN in all passages that connects the given point to the end
+//TODO	check temperature conditions
 function simulate(grid, currPos)
 {
 	const currObject = grid[currPos.y][currPos.x];
