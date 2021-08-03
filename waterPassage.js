@@ -11,7 +11,9 @@ const ObjectType = {
 	PURIFIER: 8,
 	FUNCTIONBLOCK: 9,
 	FUNCTIONCALL: 10,
-	END: 11
+	END: 11,
+	FURNACE: 12,
+	COOLER: 13
 }
 
 
@@ -39,6 +41,10 @@ function objectName(type)
 			return "Purifier";
 		case ObjectType.END:
 			return "End";
+		case ObjectType.FURNACE:
+			return "Furnace";
+		case ObjectType.COOLER:
+			return "Cooler";
 	}
 }
 
@@ -74,6 +80,7 @@ const PurityLevel = {
 	LOW_POLLUTED: 1
 }
 
+
 // Purifies the water
 function purifyWater(level)
 {
@@ -87,6 +94,45 @@ function purifyWater(level)
 			return PurityLevel.LOW_POLLUTED;
 		case PurityLevel.HIGH_POLLUTED:
 			return PurityLevel.MEDIUM_POLLUTED;
+		default:
+			return level;
+	} 
+}
+
+// Water phase level
+const WaterPhase = {
+	ICE: 0,
+	WATER: 1,
+	STEAM: 2
+}
+
+// Heats the water
+function heatWater(level)
+{
+	switch (level)
+	{
+		case WaterPhase.ICE:
+			return WaterPhase.WATER;
+		case WaterPhase.WATER:
+			return WaterPhase.STEAM;
+		case WaterPhase.STEAM:
+			return WaterPhase.STEAM;
+		default:
+			return level;
+	} 
+}
+
+// Cools the water
+function coolWater(level)
+{
+	switch (level)
+	{
+		case WaterPhase.ICE:
+			return WaterPhase.ICE;
+		case WaterPhase.WATER:
+			return WaterPhase.ICE;
+		case WaterPhase.STEAM:
+			return WaterPhase.WATER;
 		default:
 			return level;
 	} 

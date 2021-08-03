@@ -19,7 +19,7 @@ const ObjectType = {
 var LEVELS = {
 	numberOFLevels:3,
 	"1":{
-		SOURCE:{y:1,x:1},
+		SOURCE:{y:3,x:3},
 		END:{y:6,x:6},
 		WATER_PURITY_LEVEL:0,
 		IMMOVABLES:[],
@@ -59,6 +59,26 @@ var LEVELS = {
 			{type:ObjectType.DOUBLELEFT,quantity:1},
 			{type:ObjectType.DOUBLERIGHT,quantity:1},
 			{type:ObjectType.DOUBLEDUAL,quantity:1},
+		]
+	
+	},
+	"4":{ // Temperature level
+		SOURCE:{y:7,x:7}, 
+		END:{y:7,x:12},
+		WATER_PURITY_LEVEL:0,
+		IMMOVABLES:[],
+		MOVABLES:[
+			{type:ObjectType.PIPE,quantity:10}
+		]
+	
+	},
+	"5":{ // Storage level
+		SOURCE:{y:7,x:7}, 
+		END:{y:7,x:12},
+		WATER_PURITY_LEVEL:0,
+		IMMOVABLES:[],
+		MOVABLES:[
+			{type:ObjectType.PIPE,quantity:10}
 		]
 	
 	}

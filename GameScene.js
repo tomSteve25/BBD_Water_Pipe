@@ -212,7 +212,7 @@ function create_grid(){
         }
     }
  
-    //NOTE: grid[y][x]
+    //NOTE: grid[y][x] - WHY?????????
     return grid;
 }
 
