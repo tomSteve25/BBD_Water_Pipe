@@ -59,6 +59,12 @@ class GameScene extends Phaser.Scene {
         this.load.image('FURNACE', 'assets/furnace.png')
         this.load.image('COOLER', 'assets/cooler.png')
         this.load.image('TANK', 'assets/storage_tank.png')
+
+        this.load.image('WATER', 'assets/water.png')
+        this.load.image('POOP', 'assets/poop.png')
+        this.load.image('ARROW', 'assets/arrow.png')
+        this.load.image('STEAM', 'assets/steam.png')
+        this.load.image('BRICK', 'assets/brick.jpg')
         
         this.load.image('FUNCTIONBLOCK', 'assets/function.png');
         this.load.image('FUNCTIONCALL', 'assets/functioncall.png');
@@ -185,18 +191,18 @@ class GameScene extends Phaser.Scene {
                 create_sprites(this.scene, 1, kind);
                 gameObject.destroy();
             } else {
-                gameObject.x = previous_position[0];
+                gameObject.x = previous_position[0];    // WHY?
                 gameObject.y = previous_position[1];
                 grid[previous_y][previous_x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             };
             
-        }else if (grid[y][x] != null){
+        }else if (grid[y][x] != null){  // something already exists there
             //returns the pipe to its previous position
             gameObject.x = previous_position[0];
             gameObject.y = previous_position[1];
             //console.log(previous_x, previous_y);
             grid[previous_y][previous_x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
-        }else{
+        }else{ // placeable grid location
             //sets the new grid position as true (i.e. occupied)
             grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             
@@ -517,6 +523,7 @@ function generateLevel(context, current_level){
     //var numLevels = LEVELS.numberOFLevels;
     var source_pos = LEVELS[current_level_str].SOURCE;
     var end_pos = LEVELS[current_level_str].END;
+    var end2_pos = LEVELS[current_level_str].END2;
     var immovables = LEVELS[current_level_str].IMMOVABLES;
     var movables = LEVELS[current_level_str].MOVABLES;
 
@@ -524,6 +531,28 @@ function generateLevel(context, current_level){
         var key = LEVELS[current_level_str].MOVABLES[i].type;
         AVAILABLE_OBJECTS[key] = LEVELS[current_level_str].MOVABLES[i].quantity;
     } 
+
+    var brick_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'BRICK');
+    
+    var level_str_ = (1+CURRENT_LEVEL) + '';
+    var water_purity_current_level = LEVELS[level_str_].WATER_PURITY_LEVEL;
+
+    var phase_str_ = (1+CURRENT_LEVEL) + '';
+    if(LEVELS[phase_str_].WATER_PHASE_LEVEL == WaterPhase.WATER){
+        var water_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'WATER');
+        water_img.setScale(0.04);
+    }
+    else{
+        var steam_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'STEAM');
+        steam_img.setScale(0.4);
+    }
+
+    for (var i=0; i<water_purity_current_level; i++) {
+        console.log("taking a dump")
+        var poop_img = context.add.image((source_pos.x-1)*CELL_WIDTH + i*CELL_WIDTH, (source_pos.y+3)*CELL_WIDTH, 'POOP');
+        poop_img.setScale(0.25);
+    }
+
 
     //start
     //console.log(source_pos.x+1);
@@ -534,6 +563,14 @@ function generateLevel(context, current_level){
     var start_kind = getKind(start);
     var start_direction = getDirection(start.angle);
     grid[start_y][start_x] = new GameEntity(start_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, LEVELS[current_level_str].WATER_PHASE_LEVEL, start_direction, {y: start_y, x: start_x});
+    grid[start_y+1][start_x] = -1;
+    grid[start_y-1][start_x] = -1;
+    grid[start_y][start_x-1] = -1;
+    grid[start_y+1][start_x-1] = -1;
+    grid[start_y-1][start_x-1] = -1;
+
+    
+
 
     //end
     var end = context.add.sprite((end_pos.x+1)*CELL_WIDTH, (end_pos.y+1)*CELL_WIDTH, 'END');
@@ -543,6 +580,17 @@ function generateLevel(context, current_level){
     var end_kind = getKind(end);
     var end_direction = getDirection(start.angle);
     grid[end_y][end_x] = new GameEntity(end_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, LEVELS[current_level_str].WATER_PHASE_LEVEL, start_direction, {y: end_y, x: end_x});
+
+    if (end2_pos) {
+        var end2 = context.add.sprite((end2_pos.x+1)*CELL_WIDTH, (end2_pos.y+1)*CELL_WIDTH, 'END');
+        end2.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+        const end2_x = (end2.x/CELL_WIDTH)-1;
+        const end2_y = (end2.y/CELL_WIDTH)-1;
+        var end2_kind = getKind(end2);
+        var end2_direction = getDirection(start.angle);
+        grid[end2_y][end2_x] = new GameEntity(end2_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, LEVELS[current_level_str].WATER_PHASE_LEVEL, start_direction, {y: end2_y, x: end2_x});
+
+    }
 
     //game pieces
     for (var i = 0; i < movables.length; i++){

@@ -10,10 +10,7 @@ class GameInfoScene extends Phaser.Scene {
     preload (){
         console.log("INFO SCREEN")
         this.load.image('info_bg', 'assets/info_bg.png');
-        this.load.image('WATER', 'assets/water.png')
-        this.load.image('POOP', 'assets/poop.png')
-        this.load.image('ARROW', 'assets/arrow.png')
-        this.load.image('STEAM', 'assets/steam.png')
+        
     }
         
     create(){
@@ -29,37 +26,37 @@ class GameInfoScene extends Phaser.Scene {
             }
         }
 
-        var level_str_ = (1+CURRENT_LEVEL) + '';
-        var water_purity_current_level = LEVELS[level_str_].WATER_PURITY_LEVEL;
-        // level_purity = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 700, `The purity level in the source is: ${water_purity_current_level}`, { font: "bold 11px Arial", fill: "40F", wordWrap: { width: 200, useAdvancedWrap: true } });
-        // purity_text = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 715, `Currently:\nNot yet started.`, { font: "bold 12px Arial", fill: "#000", wordWrap: { width: 200, useAdvancedWrap: true } });
-        // console.log("COUNT TEXTS", count_texts)
+        // var level_str_ = (1+CURRENT_LEVEL) + '';
+        // var water_purity_current_level = LEVELS[level_str_].WATER_PURITY_LEVEL;
+        // // level_purity = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 700, `The purity level in the source is: ${water_purity_current_level}`, { font: "bold 11px Arial", fill: "40F", wordWrap: { width: 200, useAdvancedWrap: true } });
+        // // purity_text = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 715, `Currently:\nNot yet started.`, { font: "bold 12px Arial", fill: "#000", wordWrap: { width: 200, useAdvancedWrap: true } });
+        // // console.log("COUNT TEXTS", count_texts)
 
-        var phase_str_ = (1+CURRENT_LEVEL) + '';
-        // var water_phase_current_level = LEVELS[phase_str_].WATER_PHASE_LEVEL;
-        var level_phase = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 655, `Water Properties:`, { font: "bold 15px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
-        var arrow_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH) + 60, 700, 'ARROW');
-        arrow_img.setScale(0.08)
-        if(LEVELS[phase_str_].WATER_PHASE_LEVEL == WaterPhase.WATER){
-            var water_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH), 700, 'WATER');
-            water_img.setScale(0.05);
-            arrow_img.angle += 180;
-        }
-        else{
-            var steam_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH), 700, 'STEAM');
-            steam_img.setScale(0.4);
-        }
+        // var phase_str_ = (1+CURRENT_LEVEL) + '';
+        // // var water_phase_current_level = LEVELS[phase_str_].WATER_PHASE_LEVEL;
+        // var level_phase = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 655, `Water Properties:`, { font: "bold 15px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
+        // var arrow_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH) + 60, 700, 'ARROW');
+        // arrow_img.setScale(0.08)
+        // if(LEVELS[phase_str_].WATER_PHASE_LEVEL == WaterPhase.WATER){
+        //     var water_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH), 700, 'WATER');
+        //     water_img.setScale(0.05);
+        //     arrow_img.angle += 180;
+        // }
+        // else{
+        //     var steam_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH), 700, 'STEAM');
+        //     steam_img.setScale(0.4);
+        // }
 
         
         //var water_phase_current_level = ( LEVELS[phase_str_].WATER_PHASE_LEVEL == 1 ? "WATER" : "STEAM");
         //var level_phase = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 685, `Phase: ${water_phase_current_level}`, { font: "bold 11px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
 
 
-        for (var i=0; i<water_purity_current_level; i++) {
-            console.log("taking a dump")
-            var poop_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH) + i*40, 750, 'POOP');
-            poop_img.setScale(0.25);
-        }
+        // for (var i=0; i<water_purity_current_level; i++) {
+        //     console.log("taking a dump")
+        //     var poop_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH) + i*40, 750, 'POOP');
+        //     poop_img.setScale(0.25);
+        // }
     }
 }
 
@@ -120,7 +117,7 @@ function update_text(simulate_outcome_){
     if (ipurifier) {
         count_texts.purifier_text.destroy();
         var ipurifiery = ipurifier.y;
-        count_texts.purifier_text = infocontext.add.text(text_x, ipurifiery, `Purifier: ${AVAILABLE_OBJECTS[ObjectType.PURIFIER]}`, style);}
+        count_texts.purifier_text = infocontext.add.text(text_x, ipurifiery, `Filter: ${AVAILABLE_OBJECTS[ObjectType.PURIFIER]}`, style);}
     if (ifurnace) {
         count_texts.furnace_text.destroy();
         var ifurnacey = ifurnace.y;
@@ -214,7 +211,7 @@ function create_sprites_info_icons(context, number, type) {
             for (var i = 0; i < number; i++){
                 ipurifier = context.add.sprite(x, y*11.5, 'PURIFIER');
                 ipurifier.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.purifier_text = context.add.text(text_x, ipurifier.y, `Purifier: ${AVAILABLE_OBJECTS[type]}`, style);
+                count_texts.purifier_text = context.add.text(text_x, ipurifier.y, `Filter: ${AVAILABLE_OBJECTS[type]}`, style);
             }
             break;
         case ObjectType.FURNACE:
