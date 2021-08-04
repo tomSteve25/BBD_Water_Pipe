@@ -13,9 +13,15 @@ const ObjectType = {
 	FUNCTIONCALL: 10,
 	END: 11,
 	FURNACE: 12,
-	COOLER: 13
+	COOLER: 13,
+	TANK: 14
 }
 
+/**
+ * FROZEN - the pipe is frozen
+ * HEATDOWN - steam tried to go down
+ * WATERUP - water tried to go up
+ */
 const errMsg = {
 	FROZEN: -1,
 	HEATDOWN: -2,
@@ -47,10 +53,12 @@ function objectName(type)
 			return "Purifier";
 		case ObjectType.FURNACE:
 			return "Furnace";
-		case ObjectType.END:
-			return "End";
 		case ObjectType.COOLER:
 			return "Cooler";
+		case ObjectType.TANK:
+			return "Tank";
+		case ObjectType.END:
+			return "End";
 	}
 }
 
@@ -812,6 +820,49 @@ class GameEntity
 					//
 			}
 		}
+
+		if (this.kind_ === ObjectType.TANK)
+		{
+			switch (this.faceDirection_){
+				case Direction.NORTH:
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-1,
+							x: this.position_.x,
+							direction: this.faceDirection_
+						}];
+					else
+						return errMsg.WATERUP;
+				break;
+				case Direction.EAST:
+					return [{
+						y: this.position_.y,
+						x: this.position_.x+1,
+						direction: this.faceDirection_
+					}] 
+				break;
+				case Direction.SOUTH:
+					if (this.phase_ === WaterPhase.WATER){
+						return [{
+								y: this.position_.y+1,
+								x: this.position_.x,
+								direction: this.faceDirection_
+						}]
+					}
+					return errMsg.HEATDOWN
+				break;
+				case Direction.WEST:
+					return [{
+						y: this.position_.y,
+						x: this.position_.x-1,
+						direction: this.faceDirection_
+					}]
+				break;
+				default:
+					//
+			}
+		}
+		
 		//LATER
 		else if (this.kind_ == ObjectType.FUNCTIONBLOCK)
 		{
@@ -936,7 +987,6 @@ class GameEntity
 					return Direction.EAST;
 			}
 				break;
-
 			case ObjectType.FURNACE:
 				{
 					if (faceDirection === Direction.NORTH)
@@ -950,6 +1000,18 @@ class GameEntity
 				}
 					break;
 			case ObjectType.COOLER:
+				{
+					if (faceDirection === Direction.NORTH)
+						return Direction.NORTH;
+					else if (faceDirection === Direction.SOUTH)
+						return Direction.SOUTH;
+					else if (faceDirection === Direction.WEST)
+						return Direction.WEST;
+					else if (faceDirection === Direction.EAST)
+						return Direction.EAST;
+				}
+					break;
+			case ObjectType.TANK:
 				{
 					if (faceDirection === Direction.NORTH)
 						return Direction.NORTH;
@@ -1081,6 +1143,10 @@ function simulate(grid, currPos)
 		
 		// Pass water to the next object 
 		currObject.passWater(nextObject);
+		if(nextObject.kind === ObjectType.TANK){
+			console.log("TANK REACHED")
+			return {outcome:false, tank:true, tank_x:nextPos.x, tank_y:nextPos.y, message:`Tank reached.`, err:`Tank reached.`};
+		}
 		
 		result = simulate(grid, nextPos);
 		

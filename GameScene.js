@@ -1,6 +1,9 @@
 var grid = create_grid();
 var start_x;
 var start_y;
+
+var tank_sprite;
+
 class GameScene extends Phaser.Scene {
 
     OFFSET = 21.875;
@@ -32,6 +35,8 @@ class GameScene extends Phaser.Scene {
         this.load.image('PURIFIER', 'assets/purify.png');
         this.load.image('FURNACE', 'assets/furnace.png')
         this.load.image('COOLER', 'assets/cooler.png')
+        this.load.image('TANK', 'assets/storage_tank.png')
+        
         this.load.image('FUNCTIONBLOCK', 'assets/function.png');
         this.load.image('FUNCTIONCALL', 'assets/functioncall.png');
         //console.log("GameScene starts");
@@ -133,13 +138,11 @@ class GameScene extends Phaser.Scene {
         }else{
             //sets the new grid position as true (i.e. occupied)
             grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
-            AVAILABLE_OBJECTS[kind] -= 1;
-            console.log(AVAILABLE_OBJECTS)
-            // if (previous_y === 0){
-                
-                
-                
-            // }
+            
+            if (previous_y === 0){
+                AVAILABLE_OBJECTS[kind] -= 1;
+                console.log(AVAILABLE_OBJECTS)
+            }
 
             // // on release of block the source block temp goes up
             // console.log(grid[3][3]);
@@ -171,7 +174,7 @@ class GameScene extends Phaser.Scene {
         else if (gameObject.texture.key === 'run'){
             let result = simulate(grid, {y: start_y, x: start_x});
             if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
-               this.scene.start('WinScene');
+            this.scene.start('WinScene');
             }else if (result.outcome){
                 //move on to the next level
                 CURRENT_LEVEL ++;
@@ -181,10 +184,15 @@ class GameScene extends Phaser.Scene {
                 grid = create_grid();
                 this.registry.destroy(); // destroy registry
                 this.events.off(); // disable all active events
-                this.scene.restart('GameScene') // restart current scene
+                this.scene.restart('GameScene'); // restart current scene
+            }
+            else if (result.tank) {
+                start_x = result.tank_x;
+                start_y = result.tank_y;
+                
+                this.input.setDraggable(tank_sprite, false);
             }
             alert(result.message);
-            
         }else if (gameObject.texture.key === 'redo'){
             //redo current level
             grid = create_grid();
@@ -198,9 +206,9 @@ class GameScene extends Phaser.Scene {
 
     }
 
-
-
 }
+
+
 
 function create_grid(){
     var grid = new Array(17);
@@ -312,6 +320,15 @@ function create_sprites(context, number, type) {
                 //partsGroup.add(furnace);
             }
             break;
+        case ObjectType.TANK:
+            for (var i = 0; i < number; i++){
+                var tank = context.add.sprite(CELL_WIDTH*11, CELL_WIDTH, 'TANK').setInteractive();
+                tank.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                context.input.setDraggable(tank);
+                //partsGroup.add(furnace);
+                tank_sprite = tank;
+            }
+            break;
         //MISSING: functionblock and functioncal
         default:
           // code block
@@ -383,6 +400,9 @@ function getImageID(type){
             break;
         case ObjectType.COOLER:
             return 'COOLER'
+            break;
+        case ObjectType.TANK:
+            return 'TANK'
             break;
         case ObjectType.FUNCTIONBLOCK:
             return 'FUNCTIONBLOCK';
@@ -491,6 +511,9 @@ function getKind(gameObject) {
             break;
         case 'COOLER':
             return ObjectType.COOLER;
+            break;
+        case 'TANK':
+            return ObjectType.TANK;
             break;
         case 'FUNCTIONBLOCK':
             return ObjectType.FUNCTIONBLOCK;
