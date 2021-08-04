@@ -27,13 +27,14 @@ class GameInfoScene extends Phaser.Scene {
 
         var level_str_ = (1+CURRENT_LEVEL) + '';
         var water_purity_current_level = LEVELS[level_str_].WATER_PURITY_LEVEL;
-        level_purity = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 700, `The purity level in the source is: ${water_purity_current_level}`, { font: "bold 12px Arial", fill: "40F", wordWrap: { width: 200, useAdvancedWrap: true } });
+        level_purity = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 700, `The purity level in the source is: ${water_purity_current_level}`, { font: "bold 11px Arial", fill: "40F", wordWrap: { width: 200, useAdvancedWrap: true } });
         // purity_text = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 715, `Currently:\nNot yet started.`, { font: "bold 12px Arial", fill: "#000", wordWrap: { width: 200, useAdvancedWrap: true } });
         // console.log("COUNT TEXTS", count_texts)
 
         var phase_str_ = (1+CURRENT_LEVEL) + '';
-        var water_phase_current_level = LEVELS[phase_str_].WATER_PHASE_LEVEL;
-        var level_phase = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 685, `The phase in the source is: ${water_phase_current_level}`, { font: "bold 12px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
+        // var water_phase_current_level = LEVELS[phase_str_].WATER_PHASE_LEVEL;
+        var water_phase_current_level = ( LEVELS[phase_str_].WATER_PHASE_LEVEL == 1 ? "WATER" : "STEAM");
+        var level_phase = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 685, `The phase in the source is: ${water_phase_current_level}`, { font: "bold 11px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
 
 
     }
@@ -102,19 +103,19 @@ function update_text(simulate_outcome_){
         var ipurifiery = ipurifier.y;
         count_texts.purifier_text = infocontext.add.text(text_x, ipurifiery, `Inventory count: ${AVAILABLE_OBJECTS[ObjectType.PURIFIER]}`, style);}
 
-    if (purity_text){
-        console.log("UPDATED!!!!!!!!!!!!!")
-        if (simulate_outcome.outcome === undefined){
-            purity_text.setText(`Currently:\nNot yet started.`);
-        }else if (simulate_outcome.outcome) {
-            purity_text.setText(`Currently:\n${simulate_outcome.message}`);
-            purity_text.setColor('#135029')
-        }else{
-            purity_text.setText(`Currently:\n${simulate_outcome.err}`);
-            purity_text.setColor('#f00')
-        }
-        //purity_text = infocontext.add.text(text_x-CELL_WIDTH, 743, `Currently:\n${simulate_outcome}`, style);
-    }
+    // if (purity_text){
+    //     console.log("UPDATED!!!!!!!!!!!!!")
+    //     if (simulate_outcome.outcome === undefined){
+    //         purity_text.setText(`Currently:\nNot yet started.`);
+    //     }else if (simulate_outcome.outcome) {
+    //         purity_text.setText(`Currently:\n${simulate_outcome.message}`);
+    //         purity_text.setColor('#135029')
+    //     }else{
+    //         purity_text.setText(`Currently:\n${simulate_outcome.err}`);
+    //         purity_text.setColor('#f00')
+    //     }
+    //     //purity_text = infocontext.add.text(text_x-CELL_WIDTH, 743, `Currently:\n${simulate_outcome}`, style);
+    // }
     
 }
 
