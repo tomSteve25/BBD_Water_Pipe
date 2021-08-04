@@ -53,12 +53,12 @@ class GameScene extends Phaser.Scene {
     runBtn.setScale(0.14);
 
     //redo button
-    var redoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH + 25,OFFSET*3, 'redo').setOrigin(0,0);
+    var redoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH + 25,OFFSET*34, 'redo').setOrigin(0,0);
     redoBtn.setInteractive();
     redoBtn.setScale(0.08);
 
     //info button
-    var infoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH + 25, OFFSET*6, 'info').setOrigin(0,0);
+    var infoBtn = this.add.image(RIGHTEDGE-CELL_WIDTH + 25, OFFSET*3, 'info').setOrigin(0,0);
     infoBtn.setInteractive();
     infoBtn.setScale(2);
 
@@ -115,8 +115,9 @@ class GameScene extends Phaser.Scene {
                     AVAILABLE_OBJECTS[kind] += 1;
                 };
                 
-                // TODO: Add sprite or something...
-                
+                // TODO: Add sprite or something... this.scene
+                create_sprites(this.scene, 1, kind);
+                gameObject.destroy();
             } else {
                 gameObject.x = previous_position[0];
                 gameObject.y = previous_position[1];
@@ -132,12 +133,13 @@ class GameScene extends Phaser.Scene {
         }else{
             //sets the new grid position as true (i.e. occupied)
             grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
-            
-            if (previous_y === 0){
-                AVAILABLE_OBJECTS[kind] -= 1;
+            AVAILABLE_OBJECTS[kind] -= 1;
+            console.log(AVAILABLE_OBJECTS)
+            // if (previous_y === 0){
                 
                 
-            }
+                
+            // }
 
             // // on release of block the source block temp goes up
             // console.log(grid[3][3]);
@@ -150,7 +152,7 @@ class GameScene extends Phaser.Scene {
         // let result = simulate(grid, {y: start_y, x: start_x});
         // console.log(result.message)
         // update_text(result);
-        
+        update_text(true);
     });
     
     this.input.on('gameobjectdown', function(pointer, gameObject){
@@ -168,19 +170,19 @@ class GameScene extends Phaser.Scene {
         }
         else if (gameObject.texture.key === 'run'){
             let result = simulate(grid, {y: start_y, x: start_x});
-            // if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
-            //    this.scene.start('WinScene');
-            // }else if (result.outcome){
-            //     //move on to the next level
-            //     CURRENT_LEVEL ++;
-            //     //do some fancy animation
-            //     //restart scene
-            //     update_text(result);
-            //     grid = create_grid();
-            //     this.registry.destroy(); // destroy registry
-            //     this.events.off(); // disable all active events
-            //     this.scene.restart('GameScene') // restart current scene
-            // }
+            if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
+               this.scene.start('WinScene');
+            }else if (result.outcome){
+                //move on to the next level
+                CURRENT_LEVEL ++;
+                //do some fancy animation
+                //restart scene
+                update_text(result);
+                grid = create_grid();
+                this.registry.destroy(); // destroy registry
+                this.events.off(); // disable all active events
+                this.scene.restart('GameScene') // restart current scene
+            }
             alert(result.message);
             
         }else if (gameObject.texture.key === 'redo'){
@@ -233,6 +235,7 @@ function create_sprites(context, number, type) {
                 var pipe = context.add.sprite(CELL_WIDTH*ObjectType.PIPE, CELL_WIDTH, 'PIPE').setInteractive();
                 pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(pipe);
+                pipe.angle -= 90;
                 //partsGroup.add(pipe);
             }
             break;
@@ -242,6 +245,7 @@ function create_sprites(context, number, type) {
                 bend_left.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                 context.input.setDraggable(bend_left);
                 //partsGroup.add(bend_left);
+                bend_left.angle += 180;
             }
             break;
         case ObjectType.BENDRIGHT:
