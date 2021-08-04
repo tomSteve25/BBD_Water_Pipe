@@ -21,10 +21,11 @@ var LEVELS = {
 	// "1":{
 	// 	SOURCE:{y:3,x:3},
 	// 	END:{y:6,x:6},
-	// 	WATER_PURITY_LEVEL:1,
+	// 	WATER_PURITY_LEVEL:5,
 	// 	WATER_PHASE_LEVEL:1,
 	// 	IMMOVABLES:[],
 	// 	MOVABLES:[
+	// 		{type:ObjectType.TANK,quantity:5},
 	// 		{type:ObjectType.PURIFIER,quantity:2},
 	// 		{type:ObjectType.FURNACE,quantity:5},
 	// 		{type:ObjectType.COOLER,quantity:5},

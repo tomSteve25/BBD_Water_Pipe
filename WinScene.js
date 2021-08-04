@@ -13,6 +13,8 @@ class WinScene extends Phaser.Scene {
         
     create(){
         var win = this.add.sprite(0, 0, 'win').setOrigin(0,0);
+
+        saveToLocal('EndGame');
     }
 
 }

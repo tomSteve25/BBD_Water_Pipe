@@ -16,9 +16,13 @@ class SplashScene extends Phaser.Scene {
     create(){
         var howTo = this.add.sprite(0, 0, 'HowTo').setOrigin(0,0).setInteractive();
 
+        window.localStorage.clear();
+
         this.input.on('gameobjectdown', function(pointer, gameObject){
 
-                this.scene.start('GameScene');//.launch('GameInfoScene');
+            saveToLocal('StartGame');
+                
+            this.scene.start('GameScene');//.launch('GameInfoScene');
             
             
         }, this);

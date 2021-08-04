@@ -4,6 +4,29 @@ var start_y;
 
 var tank_sprite;
 
+// timestamps.
+var d;
+var text;
+var timedEvent;
+var lapTime;
+
+function formatTime(seconds) {
+    // Minutes
+    var minutes = Math.floor(seconds / 60);
+    // Seconds
+    var partInSeconds = seconds % 60;
+    // Adds left zeros to seconds
+    partInSeconds = partInSeconds.toString().padStart(2, '0');
+    // Returns formated time
+    return `${minutes}:${partInSeconds}`;
+}
+function onEvent() {
+    if (this.initialTime > 0) {
+        this.initialTime -= 1; // One second
+        text.setText('Countdown: ' + formatTime(this.initialTime));
+    }
+}
+
 class GameScene extends Phaser.Scene {
 
     OFFSET = 21.875;
@@ -98,6 +121,44 @@ class GameScene extends Phaser.Scene {
     });
  
     this.input.on('dragend', function(pointer, gameObject, dropZone) {
+
+          // did change already?
+          var objectOut = JSON.parse(localStorage.getItem('timestamps'));
+          var resultTS = objectOut[0].Boolean;
+
+          if (resultTS == false){
+              switch (CURRENT_LEVEL) {
+
+                  case 0:
+                      saveToLocal('L1FirstMove');
+                      break;
+                  case 1:
+                      saveToLocal('L2FirstMove');
+                      break;
+                  case 2:
+                      saveToLocal('L3FirstMove');
+                      break;
+                  case 3:
+                      saveToLocal('L4FirstMove');
+                      break;
+                  case 4:
+                      saveToLocal('L5FirstMove');
+                      break;
+                  case 5:
+                      saveToLocal('L6FirstMove');
+                      break;
+                  case 6:
+                      saveToLocal('L7FirstMove');
+                      break;
+                  default:
+              }
+              saveToLocal('hasMoved');              
+              console.log(localStorage);
+          }
+
+          // var seconds = (endDate.getTime() - ts_One.getTime()) / 1000;
+          //  console.log("Difference:" + seconds + " seconds");
+
         drag_triggered = false;
         let x = (gameObject.x/CELL_WIDTH)-1;
         let y = (gameObject.y/CELL_WIDTH)-1;
@@ -176,6 +237,36 @@ class GameScene extends Phaser.Scene {
             if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
             this.scene.start('WinScene');
             }else if (result.outcome){
+
+                switch (CURRENT_LEVEL) {
+
+                    case 0:
+                        saveToLocal('L1Complete');
+                        break;
+                    case 1:
+                        saveToLocal('L2Complete');
+                        break;
+                    case 2:
+                        saveToLocal('L3Complete');
+                        break;
+                    case 3:
+                        saveToLocal('L4Complete');
+                        break;
+                    case 4:
+                        saveToLocal('L5Complete');
+                        break;
+                    case 5:
+                        saveToLocal('L6Complete');
+                        break;
+                    case 6:
+                        saveToLocal('L7Complete');
+                        break;
+                    default:
+                        break;
+                }
+                saveToLocal('hasMoved');
+                console.log(localStorage);
+
                 //move on to the next level
                 CURRENT_LEVEL ++;
                 //do some fancy animation

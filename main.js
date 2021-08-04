@@ -3,23 +3,29 @@ var CELL_WIDTH = 43.75;
 var RIGHTEDGE = 743.75;
 var WIDTH = 992;
 var HEIGHT = 743.75 + CELL_WIDTH;
+console.log('first log');
 
-var config = {
-    type: Phaser.AUTO,
-    width: WIDTH,
-    height: 743.75+CELL_WIDTH,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 200 }
-        }
-    },
-    scene: [ MainMenuScene, 
-        SplashScene,
-        GameScene, 
-        GameInfoScene,
-        WinScene]
-};
- 
-var game = new Phaser.Game(config); 
- 
+window.addEventListener('load', (event) => {
+    console.log('second log');
+    var config = {
+        type: Phaser.AUTO,
+        width: WIDTH,
+        height: 743.75+CELL_WIDTH,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 200 }
+            }
+        },
+        scene: [ 
+            MainMenuScene, 
+            SplashScene,
+            GameScene, 
+            GameInfoScene,
+            WinScene]
+    };
+    
+    var game = new Phaser.Game(config); 
+     
+  });
+  console.log('third log');
