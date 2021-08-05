@@ -17,46 +17,34 @@ const ObjectType = {
 
 
 var LEVELS = {
-	numberOFLevels:14,
+	numberOFLevels:16,
 
-	"1":{ //Test
-		SOURCE:{y:7,x:3},
-		END:{y:10,x:11},
-		WATER_PURITY_LEVEL:3,
-		WATER_PHASE_LEVEL:1,
-		IMMOVABLES:[
+	// "1":{ //Test
+	// 	SOURCE:{y:7,x:3},
+	// 	END:{y:10,x:11},
+	// 	WATER_PURITY_LEVEL:3,
+	// 	WATER_PHASE_LEVEL:1,
+	// 	IMMOVABLES:[
 			
-		],
-		blueprint: true,
-		MOVABLES:[
-			{type:ObjectType.PURIFIER,quantity:3},
-			{type:ObjectType.PIPE,quantity:10},
-			{type:ObjectType.BENDRIGHT,quantity:6},
-			{type:ObjectType.BENDLEFT,quantity:6},
-			{type:ObjectType.DOUBLELEFT,quantity:3},
-			{type:ObjectType.DOUBLERIGHT,quantity:3},
-			{type:ObjectType.DOUBLEDUAL,quantity:3},
-			{type:ObjectType.FURNACE,quantity:3},
-			{type:ObjectType.COOLER,quantity:3},
-			{type:ObjectType.TANK,quantity:1},
-			{type:ObjectType.CHECKPIPE, quantity:5},
-			{type:ObjectType.FUNCTIONBLOCK, quantity:1}
-		]
-	},
-
-	"15":{ //Tank
-		SOURCE:{y:6,x:4},
-		END:{y:6,x:10},
-		WATER_PURITY_LEVEL:0,
-		WATER_PHASE_LEVEL:1,
-		IMMOVABLES:[],
-		MOVABLES:[
-			{type:ObjectType.PIPE,quantity:2},
-			{type:ObjectType.TANK,quantity:1}
-		]
-	},
+	// 	],
+	// 	blueprint: true,
+	// 	MOVABLES:[
+	// 		{type:ObjectType.PURIFIER,quantity:3},
+	// 		{type:ObjectType.PIPE,quantity:10},
+	// 		{type:ObjectType.BENDRIGHT,quantity:6},
+	// 		{type:ObjectType.BENDLEFT,quantity:6},
+	// 		{type:ObjectType.DOUBLELEFT,quantity:3},
+	// 		{type:ObjectType.DOUBLERIGHT,quantity:3},
+	// 		{type:ObjectType.DOUBLEDUAL,quantity:3},
+	// 		{type:ObjectType.FURNACE,quantity:3},
+	// 		{type:ObjectType.COOLER,quantity:3},
+	// 		{type:ObjectType.TANK,quantity:1},
+	// 		{type:ObjectType.CHECKPIPE, quantity:5},
+	// 		{type:ObjectType.FUNCTIONBLOCK, quantity:1}
+	// 	]
+	// },
 	
-	"111":{ //Water goes down
+	"1":{ //Water goes down
 		SOURCE:{y:3,x:3},
 		END:{y:6,x:6},
 		WATER_PURITY_LEVEL:0,
@@ -189,7 +177,7 @@ var LEVELS = {
 			{type:ObjectType.BENDRIGHT, quantity:1}
 		]
 	},
-	"10":{
+	"10":{ // Use sppecials
 		SOURCE:{y:10,x:3},
 		END:{y:10,x:12},
 		WATER_PURITY_LEVEL:1,
@@ -222,7 +210,18 @@ var LEVELS = {
 			{type:ObjectType.FURNACE,quantity:1}
 		]
 	},
-	"12":{ //Loops
+	"12":{ //Tank
+		SOURCE:{y:6,x:4},
+		END:{y:6,x:10},
+		WATER_PURITY_LEVEL:0,
+		WATER_PHASE_LEVEL:1,
+		IMMOVABLES:[],
+		MOVABLES:[
+			{type:ObjectType.PIPE,quantity:2},
+			{type:ObjectType.TANK,quantity:1}
+		]
+	},
+	"13":{ //Loops
 		SOURCE:{y:7,x:3},
 		END:{y:10,x:11},
 		WATER_PURITY_LEVEL:3,
@@ -245,7 +244,7 @@ var LEVELS = {
 			{type:ObjectType.COOLER,quantity:1}
 		]
 	},
-	"13":{ //Loops 2
+	"14":{ //Loops Hard
 		SOURCE:{y:7,x:3},
 		END:{y:10,x:11},
 		WATER_PURITY_LEVEL:3,
@@ -265,9 +264,9 @@ var LEVELS = {
 		]
 	},
 	"Function":{ //function grid
-		SOURCE:{y:7,x:5},
-		END:{y:7,x:7},
-		// END:{y:10,x:10},
+		SOURCE:{y:6,x:4},
+		// END:{y:7,x:7},
+		END:{y:11,x:11},
 		WATER_PURITY_LEVEL:0,
 		WATER_PHASE_LEVEL:1,
 		IMMOVABLES:[],
@@ -281,7 +280,8 @@ var LEVELS = {
 			{type:ObjectType.DOUBLEDUAL,quantity:16},
 			{type:ObjectType.BENDRIGHT,quantity:16},
 			{type:ObjectType.BENDLEFT,quantity:16},
-			{type:ObjectType.CHECKPIPE,quantity:16}
+			{type:ObjectType.CHECKPIPE,quantity:16},
+			{type:ObjectType.TANK,quantity:0}
 		]
 	},
 	// "10":{ //Basic level

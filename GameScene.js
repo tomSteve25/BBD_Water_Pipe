@@ -1,3 +1,9 @@
+//TODO function collisions
+//TODO remove image from function source
+//TODO function walls
+//TODO function borders
+
+
 var grid = create_grid();
 var function_grid;
 var temp_grid;
@@ -13,9 +19,11 @@ var text;
 var timedEvent;
 var lapTime;
 var second_click = false;
+var f = 0;
 
 //Functions
 var inFunction = false;
+var functionBlockMoved = false;
 
 function formatTime(seconds) {
     // Minutes
@@ -49,7 +57,9 @@ class GameScene extends Phaser.Scene {
         this.load.image('run', 'assets/run.png');
         this.load.image('redo', 'assets/redo.png');
         this.load.image('info', 'assets/info.png');
-        this.load.image('HowTo', 'assets/HowTo.png');
+        this.load.image('HowTo_1', 'assets/HowTopage_1.png');
+        this.load.image('HowTo_2', 'assets/HowTopage_2.png');
+        this.load.image('HowTo_3', 'assets/HowTopage_3.png');
         this.load.image('bin', 'assets/trash.png')
 
         this.load.image('SOURCE', 'assets/start.png');
@@ -72,6 +82,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('ARROW', 'assets/arrow.png')
         this.load.image('STEAM', 'assets/steam.png')
         this.load.image('BRICK', 'assets/brick.jpg')
+        this.load.image('DARK_BRICK', 'assets/dark_brick.png')
         
         this.load.image('FUNCTIONBLOCK', 'assets/function.png');
         this.load.image('FUNCTIONCALL', 'assets/functioncall.png');
@@ -124,7 +135,7 @@ class GameScene extends Phaser.Scene {
     // saveBtn.setVisible(false);
 
     //How to
-    var howTo = this.add.image(0, 0, 'HowTo').setOrigin(0,0).setVisible(false);
+    var howTo = this.add.sprite(0, 0, 'HowTo_1').setOrigin(0,0).setVisible(false);
 
     var previous_position; // previous position of game object in pixels
     var previous_x; // previous x position of game object in the 2D array
@@ -146,8 +157,10 @@ class GameScene extends Phaser.Scene {
             for(var i = 0; i < grid.length; i++){
                 for(var j = 0; j < grid[0].length; j++){
                     //console.log(grid[i][j]);
-                    if(grid[i][j] == -2 || (grid[i][j] instanceof GameEntity && grid[i][j].kind === ObjectType.FUNCTIONBLOCK))
+                    if(grid[i][j] == -2 || (grid[i][j] instanceof GameEntity && grid[i][j].kind === ObjectType.FUNCTIONBLOCK)){
                         grid[i][j] = null;
+                        console.log("making nulls")
+                    }
                 }
             }
         }
@@ -163,6 +176,8 @@ class GameScene extends Phaser.Scene {
     });
  
     this.input.on('dragend', function(pointer, gameObject, dropZone) {
+
+        console.log(grid);
 
           // did change already?
           var objectOut = JSON.parse(localStorage.getItem('timestamps'));
@@ -223,7 +238,6 @@ class GameScene extends Phaser.Scene {
                     AVAILABLE_OBJECTS[kind] += 1;
                 };
                 
-                // TODO: Add sprite or something... this.scene
                 create_sprites(this.scene, 1, kind);
                 gameObject.destroy();
             } else {
@@ -232,7 +246,7 @@ class GameScene extends Phaser.Scene {
                 grid[previous_y][previous_x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             };
             
-        }else if (grid[y][x] != null){  // something already exists there
+        }else if (grid[y][x] != null && kind != ObjectType.FUNCTIONBLOCK){  // something already exists there
             //returns the pipe to its previous position
             gameObject.x = previous_position[0];
             gameObject.y = previous_position[1];
@@ -243,8 +257,49 @@ class GameScene extends Phaser.Scene {
             console.log("y  : " + y);
             console.log("x: " + x);
             console.log(gameObject);
-            if(kind === ObjectType.FUNCTIONBLOCK){ //TODO figure out wtf is happening
-                console.log("FUntionssss");
+            if(kind === ObjectType.FUNCTIONBLOCK){
+
+                let placeable = grid[y][x] == null; 
+                placeable = grid[y-1][x] == null && placeable;
+                placeable = grid[y-1][x+1] == null && placeable; 
+                placeable = grid[y-1][x-1] == null && placeable; 
+                placeable = grid[y+1][x] == null && placeable; 
+                placeable = grid[y+1][x+1] == null && placeable; 
+                placeable = grid[y+1][x-1] == null && placeable; 
+                placeable = grid[y-1][x] == null && placeable; 
+                placeable = grid[y][x+1] == null && placeable;
+
+                console.log("placeable: ", placeable);
+                
+                // placeable = grid[y-1][x] 
+                //     && grid[y-1][x+1] && grid[y+1][x] && grid[y+1][x+1] 
+                //     && grid[y][x+1] && grid[y][x-1] && grid[y+1][x-1] && grid[y+1][x-1] &&  grid[y-1][x-1];
+                    // grid[y-1][x] = -2;
+                    // grid[y-1][x+1] = -2;
+                    // grid[y+1][x] = -2;
+                    // grid[y+1][x+1] = -2;
+                    // grid[y][x+1] = -2;
+                    // grid[y][x-1] = -2;
+                    // grid[y+1][x-1] = -2;
+                    // grid[y-1][x-1] = -2;
+                
+                // if (placeable) {
+                //     console.log("FUntionssss");
+                    
+                // } else {
+                //     x = previous_x;
+                //     y = previous_y;
+                // }
+
+                if (!placeable) {
+                    x = previous_x;
+                    y = previous_y;
+
+                    gameObject.x = previous_position[0];
+                    gameObject.y = previous_position[1];
+                }
+
+                console.log("x,y", x, y)
 
                 grid[y][x] = -2;
                 grid[y-1][x] = -2;
@@ -278,6 +333,7 @@ class GameScene extends Phaser.Scene {
                         break;
 
                 }
+                
             } else {
                 grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             }
@@ -311,10 +367,15 @@ class GameScene extends Phaser.Scene {
             howTo.setVisible(true)
             howTo.setInteractive();
             this.scene.sendToBack('GameInfoScene');
-        }else if (gameObject.texture.key === 'HowTo'){
-            //hide splash
-            howTo.disableInteractive();
-            howTo.setVisible(false);
+        }
+        else if (gameObject.texture.key === 'HowTo_1'){
+            howTo = this.add.sprite(0, 0, 'HowTo_2').setOrigin(0,0).setInteractive();
+        }
+        else if(gameObject.texture.key === 'HowTo_2'){
+                howTo = this.add.sprite(0, 0, 'HowTo_3').setOrigin(0,0).setInteractive();
+        }
+        else if(gameObject.texture.key === 'HowTo_3'){
+                this.scene.start('GameScene');//.launch('GameInfoScene');
         }
         else if (gameObject.texture.key === 'FUNCTIONCALL') {
             // console.log(functionBtn);
@@ -334,50 +395,41 @@ class GameScene extends Phaser.Scene {
 
                 grid = create_grid();
 
+
                 TEMP_CURRENT_LEVEL = CURRENT_LEVEL;
                 CURRENT_LEVEL = "Function";
 
-                this.registry.destroy(); // TODO somehow save registry?
-                this.events.off(); // disable all active events why?
+                this.registry.destroy(); //
+                this.events.off(); 
                 this.scene.restart('GameScene'); 
 
                 inFunction = true;
+                
             } 
             else {
+                functionBtn.setTexture("SAVE");
+                console.log("Function call: false");
+
+                //SAVE FUNCTION GRID
+                function_grid = grid;
+                console.log("Function_grid: ")
+                console.log(function_grid);
+
+                // Revert to level
+                CURRENT_LEVEL = TEMP_CURRENT_LEVEL;
+                grid = temp_grid;
+                console.log("Grid:")
                 console.log(grid);
-                let result = simulate({y: start_y, x: start_x});
+        
+                this.registry.destroy(); // destroy registry
+                this.events.off(); // disable all active events
+                this.scene.restart('GameScene'); // restart current scene
 
-                console.log(result);
-                if (result.outcome) {
-                // if (true) {
-
-                    functionBtn.setTexture("SAVE");
-                    console.log("Function call: false");
-
-                    //SAVE FUNCTION GRID
-                    function_grid = grid;
-                    console.log("Function_grid: ")
-                    console.log(function_grid);
-
-                    // Revert to level
-                    CURRENT_LEVEL = TEMP_CURRENT_LEVEL;
-                    grid = temp_grid;
-                    console.log("Grid:")
-                    console.log(grid);
-                
-                    // TODO update amount values
-                    
-                    // TODO play around with these
-                    this.registry.destroy(); // destroy registry
-                    this.events.off(); // disable all active events
-                    this.scene.restart('GameScene'); // restart current scene
-
-                    inFunction = false;
-                    console.log("second click");
-                    
-                }
-                
-                alert(result.message);
+                inFunction = false;
+                console.log("second click");
+                second_click = true;
+                f++;
+                // create_sprites(this.scene, 1, ObjectType.FUNCTIONBLOCK);
             }
             
         }
@@ -388,57 +440,60 @@ class GameScene extends Phaser.Scene {
         //     functionBtn.setScale(0.3);
         // }
         else if (gameObject.texture.key === 'run'){
-            console.log("SIMULATING!!!!!");
-            let result = simulate({y: start_y, x: start_x});
-            if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
-            this.scene.start('WinScene');
-            }else if (result.outcome && !inFunction){
-                switch (CURRENT_LEVEL) {
-                    case 0:
-                        saveToLocal('L1Complete', 0);
-                        saveToLocal('L1PipesUsed', pipedUsed);
-                        break;
-                    case 1:
-                        saveToLocal('L2Complete', 0);
-                        saveToLocal('L2PipesUsed', pipedUsed);
-                        break;
-                    case 2:
-                        saveToLocal('L3Complete', 0);
-                        saveToLocal('L3PipesUsed', pipedUsed);
-                        break;
-                    case 3:
-                        saveToLocal('L4Complete', 0);
-                        saveToLocal('L4PipesUsed', pipedUsed);
-                        break;
-                    case 4:
-                        saveToLocal('L5Complete', 0);
-                        saveToLocal('L5PipesUsed', pipedUsed);
-                        break;
-                    case 5:
-                        saveToLocal('L6Complete', 0);
-                        saveToLocal('L6PipesUsed', pipedUsed);
-                        break;
-                    case 6:
-                        saveToLocal('L7Complete', 0);
-                        saveToLocal('L7PipesUsed', pipedUsed);
-                        break;
-                    default:
-                        break;
-                }
-                pipedUsed = 0 ;
-                saveToLocal('hasMoved', 0);
-                console.log(localStorage);
-                
+            let result;
+            if (!inFunction) {
+                console.log("SIMULATING!!!!!");
+                result = simulate({y: start_y, x: start_x});
+                if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
+                this.scene.start('WinScene');
+                }else if (result.outcome && !inFunction){
+                    switch (CURRENT_LEVEL) {
+                        case 0:
+                            saveToLocal('L1Complete', 0);
+                            saveToLocal('L1PipesUsed', pipedUsed);
+                            break;
+                        case 1:
+                            saveToLocal('L2Complete', 0);
+                            saveToLocal('L2PipesUsed', pipedUsed);
+                            break;
+                        case 2:
+                            saveToLocal('L3Complete', 0);
+                            saveToLocal('L3PipesUsed', pipedUsed);
+                            break;
+                        case 3:
+                            saveToLocal('L4Complete', 0);
+                            saveToLocal('L4PipesUsed', pipedUsed);
+                            break;
+                        case 4:
+                            saveToLocal('L5Complete', 0);
+                            saveToLocal('L5PipesUsed', pipedUsed);
+                            break;
+                        case 5:
+                            saveToLocal('L6Complete', 0);
+                            saveToLocal('L6PipesUsed', pipedUsed);
+                            break;
+                        case 6:
+                            saveToLocal('L7Complete', 0);
+                            saveToLocal('L7PipesUsed', pipedUsed);
+                            break;
+                        default:
+                            break;
+                    }
+                    pipedUsed = 0 ;
+                    saveToLocal('hasMoved', 0);
+                    console.log(localStorage);
+                    
 
-                //move on to the next level
-                CURRENT_LEVEL ++;
-                //do some fancy animation
-                //restart scene
-                update_text(result);
-                grid = create_grid();
-                this.registry.destroy(); // destroy registry
-                this.events.off(); // disable all active events
-                this.scene.restart('GameScene'); // restart current scene
+                    //move on to the next level
+                    CURRENT_LEVEL ++;
+                    //do some fancy animation
+                    //restart scene
+                    update_text(result);
+                    grid = create_grid();
+                    this.registry.destroy(); // destroy registry
+                    this.events.off(); // disable all active events
+                    this.scene.restart('GameScene'); // restart current scene
+                }
             }
             else if (result.tank) {
                 start_x = result.tank_x;
@@ -519,6 +574,48 @@ function create_grid(){
 
 function create_sprites(context, number, type) {
     //generates sprites givent the number of sprites needed and the type of sprite needed
+    if(inFunction){
+        for(let i =0; i < grid.length-1; i++){
+            for(let j = 0; j < grid[0].length; j++){
+                if(i < 5){
+                    grid[i+1][j] = -3;
+                    dbrick = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+2) , 'DARK_BRICK');
+                    dbrick.setScale(0.35)
+                }
+                else if(i >= 5 && j < 2){
+                    grid[i+1][j] = -3;
+                    dbrick = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+2) , 'DARK_BRICK');
+                    dbrick.setScale(0.35)
+                }
+                else if(i > 7 && j < 5){
+                    grid[i+1][j] = -3;
+                    dbrick = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+2) , 'DARK_BRICK');
+                    dbrick.setScale(0.35)
+                }
+                else if (i > 10 && j < 16){
+                    grid[i+1][j] = -3;
+                    dbrick = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+2) , 'DARK_BRICK');
+                    dbrick.setScale(0.35)
+                }
+                else if (j > 11){
+                    grid[i+1][j] = -3;
+                    dbrick = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+2) , 'DARK_BRICK');
+                    dbrick.setScale(0.35)
+                }
+                if(j == 11 && i != 10){
+                    grid[i+1][j] = -3;
+                    dbrick = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+2) , 'DARK_BRICK');
+                    dbrick.setScale(0.35)
+                }
+            }
+        }
+
+        // dbrick = context.add.sprite(CELL_WIDTH*3, CELL_WIDTH*3 , 'DARK_BRICK');
+        // dbrick = context.add.sprite(CELL_WIDTH*4, CELL_WIDTH*3, 'DARK_BRICK');
+        // dbrick = context.add.sprite(CELL_WIDTH*5, CELL_WIDTH*3, 'DARK_BRICK');
+        // dbrick = context.add.sprite(CELL_WIDTH*6, CELL_WIDTH*3, 'DARK_BRICK');
+    }
+    
     switch(type) {
         case ObjectType.PIPE:
             for (var i = 0; i < number; i++){
@@ -612,8 +709,13 @@ function create_sprites(context, number, type) {
             }
             break;
         case ObjectType.FUNCTIONBLOCK:
-            
+            if (second_click && f==1){
+                var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH*4, 'FUNCTIONBLOCK').setInteractive();
+                context.input.setDraggable(functionblock);
+                functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            }
             break;
+        
         default:
           // code block
     }
@@ -713,16 +815,16 @@ function generateLevel(context, current_level){
     var end2_pos = LEVELS[current_level_str].END2;
     var immovables = LEVELS[current_level_str].IMMOVABLES;
     
-    if (current_level_str == "Function") {
-        console.log(String(TEMP_CURRENT_LEVEL))
-        movables = LEVELS[String(TEMP_CURRENT_LEVEL)].MOVABLES; 
+    // if (current_level_str == "Function") {
+    //     console.log(String(TEMP_CURRENT_LEVEL))
+    //     movables = LEVELS[String(TEMP_CURRENT_LEVEL)].MOVABLES; 
 
-        for (var i=0; i < movables.length; i++) {
-            console.log(movables[i].quantity);
-        }
-    } else {
-        var movables = LEVELS[current_level_str].MOVABLES;
-    }
+    //     for (var i=0; i < movables.length; i++) {
+    //         console.log(movables[i].quantity);
+    //     }
+    // } else {
+    var movables = LEVELS[current_level_str].MOVABLES;
+    // }
 
     //loop to display amount of pieces
     for (var i = 0; i < movables.length; i++){
@@ -732,24 +834,26 @@ function generateLevel(context, current_level){
 
     var brick_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'BRICK');
     
-    var level_str_ = (CURRENT_LEVEL) + '';
-    var water_purity_current_level = LEVELS[level_str_].WATER_PURITY_LEVEL;
+    if (!inFunction) {
+        var level_str_ = (CURRENT_LEVEL) + '';
+        var water_purity_current_level = LEVELS[level_str_].WATER_PURITY_LEVEL;
 
-    var phase_str_ = (CURRENT_LEVEL) + '';
-    if(LEVELS[phase_str_].WATER_PHASE_LEVEL == WaterPhase.WATER){
-        var water_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'WATER');
-        water_img.setScale(0.04);
-    }
-    else{
-        var steam_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'STEAM');
-        steam_img.setScale(0.4);
-    }
+        var phase_str_ = (CURRENT_LEVEL) + '';
+        if(LEVELS[phase_str_].WATER_PHASE_LEVEL == WaterPhase.WATER){
+            var water_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'WATER');
+            water_img.setScale(0.04);
+        }
+        else{
+            var steam_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'STEAM');
+            steam_img.setScale(0.4);
+        }
 
-    for (var i=0; i<water_purity_current_level; i++) {
-        console.log("taking a dump")
-        var poop_img = context.add.image((source_pos.x-1)*CELL_WIDTH + i*CELL_WIDTH, (source_pos.y+3)*CELL_WIDTH, 'POOP');
-        poop_img.setScale(0.25);
-    }
+        for (var i=0; i<water_purity_current_level; i++) {
+            console.log("taking a dump")
+            var poop_img = context.add.image((source_pos.x-1)*CELL_WIDTH + i*CELL_WIDTH, (source_pos.y+3)*CELL_WIDTH, 'POOP');
+            poop_img.setScale(0.25);
+        }
+}   
 
     // var pipe = context.add.sprite(CELL_WIDTH*ObjectType.PIPE, CELL_WIDTH, 'PIPE').setInteractive();
     //             pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
@@ -816,11 +920,12 @@ function generateLevel(context, current_level){
                         // var functionblock = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'FUNCTIONBLOCK').setInteractive();
                         // context.input.setDraggable(functionblock);
                         // functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                        break;
-                    default:
                         var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH, 'FUNCTIONBLOCK').setInteractive();
                         context.input.setDraggable(functionblock);
                         functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    default:
+                        
                         break;
                 }
             }
