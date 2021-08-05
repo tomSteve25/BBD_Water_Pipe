@@ -1,3 +1,6 @@
+var runningFunctionBlock = false;
+var temp_nextPos;
+
 // The object kinds 
 const ObjectType = {
 	SOURCE: 0,
@@ -59,6 +62,8 @@ function objectName(type)
 			return "Tank";
 		case ObjectType.END:
 			return "End";
+		case ObjectType.FUNCTIONBLOCK:
+			return "Function block"
 	}
 }
 
@@ -171,13 +176,6 @@ class GameEntity
 		return this.purity_ === PurityLevel.CLEAN
 	}
 
-	get isSteam(){
-		return this.phase === WaterPhase.STEAM;
-	}
-
-	get isIce(){
-		return this.phase === WaterPhase.ICE;
-	}
 
 	get traversed() {return this.traversed_;}
 	increaseTraversed() {this.traversed_++;}
@@ -242,7 +240,7 @@ class GameEntity
 			this.phase_ = coolWater(this.phase_);
 			console.log("After: "+this.phase_);
 		}
-
+		
 		console.log("Normal Pipe")
 		otherObject.purity = this.purity_;
 		otherObject.phase = this.phase_;
@@ -819,7 +817,7 @@ class GameEntity
 				default:
 					//
 			}
-		}
+		} 
 
 		if (this.kind_ === ObjectType.TANK)
 		{
@@ -863,19 +861,56 @@ class GameEntity
 			}
 		}
 		
-		//LATER
 		else if (this.kind_ == ObjectType.FUNCTIONBLOCK)
 		{
-			return [{}]
+			switch (this.faceDirection_){
+				case Direction.NORTH:
+					if (this.phase_ === WaterPhase.STEAM)
+						return [{
+							y: this.position_.y-2,
+							x: this.position_.x+1,
+							direction: this.faceDirection_
+						}];
+					else
+						return errMsg.WATERUP;
+				break;
+				case Direction.EAST:
+					return [{
+						y: this.position_.y+1,
+						x: this.position_.x+2,
+						direction: this.faceDirection_
+					}] 
+				break;
+				case Direction.SOUTH:
+					if (this.phase_ === WaterPhase.WATER){
+						return [{
+								y: this.position_.y+2,
+								x: this.position_.x-1,
+								direction: this.faceDirection_
+						}]
+					}
+					return errMsg.HEATDOWN
+				break;
+				case Direction.WEST:
+					return [{
+						y: this.position_.y-1,
+						x: this.position_.x-2,
+						direction: this.faceDirection_
+					}]
+				break;
+				default:
+					//
+			}
 		}
-		else if (this.kind_ == ObjectType.FUNCTIONCALL)
-		{
-			return [{}]
-		}
-		else if (this.kind_ == ObjectType.FUNCTIONCALL)
-		{
-			return [{}]
-		}else if (this.kind_ === ObjectType.END){
+		// else if (this.kind_ == ObjectType.FUNCTIONCALL)
+		// {
+		// 	return [{}]
+		// }
+		// else if (this.kind_ == ObjectType.FUNCTIONCALL)
+		// {
+		// 	return [{}]
+		// }
+		else if (this.kind_ === ObjectType.END){
 			console.log("This type is END")
 		}
 		else {
@@ -1028,26 +1063,13 @@ class GameEntity
 			case ObjectType.FUNCTIONBLOCK:
 			{
 				if (faceDirection === Direction.NORTH)
-					return null;
+					return Direction.NORTH;
 				else if (faceDirection === Direction.SOUTH)
-					return null;
+					return Direction.SOUTH;
 				else if (faceDirection === Direction.WEST)
-					return null;
+					return Direction.WEST;
 				else if (faceDirection === Direction.EAST)
-					return null;
-			}
-				break;
-			//Not yet implemented
-			case ObjectType.FUNCTIONCALL:
-			{
-				if (faceDirection === Direction.NORTH)
-					return null;
-				else if (faceDirection === Direction.SOUTH)
-					return null;
-				else if (faceDirection === Direction.WEST)
-					return null;
-				else if (faceDirection === Direction.EAST)
-					return null;
+					return Direction.EAST;
 			}
 				break;
 			case ObjectType.END:
@@ -1081,7 +1103,7 @@ function simulate(grid, currPos)
 	// 	console.log("NEW ERROR TRIGGERED")
 	// 	return {outcome:false, message:"0 error", err:"18 error"};
 	// }
-
+	
 	if (currObject.kind == ObjectType.SOURCE)
 		resetTravereCount(grid);
 
@@ -1099,10 +1121,15 @@ function simulate(grid, currPos)
 	// If it is the end, we return true if the water if clean and false otherwise
 	if (currObject.kind === ObjectType.END)
 	{
-		if (currObject.hasCleanWater)
-			return {outcome:true, message:"Clean water is supplied."}
-		else
-			return {outcome:false, message:"Dirty water is supplied.", err:`ERROR! DIRTY water reaching the end {purity level:${currObject.purity} MUST BE 0.}`}
+		if (runningFunctionBlock) {
+			runningFunctionBlock = false;
+			nextPos = temp_nextPos;
+		} else {
+			if (currObject.hasCleanWater)
+				return {outcome:true, message:"Clean water is supplied."}
+			else
+				return {outcome:false, message:"Dirty water is supplied.", err:`ERROR! DIRTY water reaching the end {purity level:${currObject.purity} MUST BE 0.}`}
+		}
 	}
 	
 	// Otherwise if it is not the end we try move to the next position(s) connected to by the current object
@@ -1141,14 +1168,32 @@ function simulate(grid, currPos)
 			return {outcome:false, message:"Blocked water passsage.", err}
 		}
 		
+		if (nextObject.kind === ObjectType.FUNCTIONBLOCK){
+			runningFunctionBlock = true;
+
+			nextPos = temp_nextPos;
+			nextPos.y = 7;
+			nextPos.x = 6;
+			nextPos.direction = Direction.EAST;
+
+			nextObject = function_grid[7][6];
+		}
+
 		// Pass water to the next object 
 		currObject.passWater(nextObject);
+
+		// TODO test tank has correct properties
 		if(nextObject.kind === ObjectType.TANK){
 			console.log("TANK REACHED")
 			return {outcome:false, tank:true, tank_x:nextPos.x, tank_y:nextPos.y, message:`Tank reached.`, err:`Tank reached.`};
 		}
 		
-		result = simulate(grid, nextPos);
+		if (runningFunctionBlock) {
+			result = simulate(function_grid, nextPos);
+		} else {
+			result = simulate(grid, nextPos);
+		}
+		
 		
 		if (!result.outcome)
 			return result;

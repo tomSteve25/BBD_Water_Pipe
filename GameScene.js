@@ -85,7 +85,7 @@ class GameScene extends Phaser.Scene {
     this.scene.launch('GameInfoScene');
 
     //level generation
-    console.log(grid);
+    // console.log(grid);
     generateLevel(this, CURRENT_LEVEL);
 
     //run button
@@ -267,13 +267,14 @@ class GameScene extends Phaser.Scene {
             // saveBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'SAVE').setOrigin(0,0);
             // saveBtn.setInteractive();
             // saveBtn.setScale(0.3);
-
-            inFunction = !inFunction;
             
-            if(inFunction){
+            if(!inFunction){
                 functionBtn.setTexture("FUNCTIONCALL");
                 console.log("Function call: true");
                 temp_grid = grid;
+                console.log("Temp_grid:");
+                console.log(temp_grid);
+
                 grid = create_grid();
 
                 TEMP_CURRENT_LEVEL = CURRENT_LEVEL;
@@ -282,26 +283,41 @@ class GameScene extends Phaser.Scene {
                 this.registry.destroy(); // TODO somehow save registry?
                 this.events.off(); // disable all active events why?
                 this.scene.restart('GameScene'); 
+
+                inFunction = true;
             } 
             else {
-                functionBtn.setTexture("SAVE");
-                console.log("Function call: false");
+                let result = simulate(grid, {y: start_y, x: start_x});
 
-                //SAVE FUNCTION GRID
-                function_grid = grid;
+                // if (result.outcome) {
+                if (true) {
 
-                // Revert to level
-                CURRENT_LEVEL = TEMP_CURRENT_LEVEL;
-                grid = temp_grid;
+                    functionBtn.setTexture("SAVE");
+                    console.log("Function call: false");
+
+                    //SAVE FUNCTION GRID
+                    function_grid = grid;
+                    console.log("Function_grid: ")
+                    console.log(function_grid);
+
+                    // Revert to level
+                    CURRENT_LEVEL = TEMP_CURRENT_LEVEL;
+                    grid = temp_grid;
+                    console.log("Grid:")
+                    console.log(grid);
                 
-                // TODO update amount values
-                
-                // TODO play around with these
-                this.registry.destroy(); // destroy registry
-                this.events.off(); // disable all active events
-                this.scene.restart('GameScene'); // restart current scene
+                    // TODO update amount values
+                    
+                    // TODO play around with these
+                    this.registry.destroy(); // destroy registry
+                    this.events.off(); // disable all active events
+                    this.scene.restart('GameScene'); // restart current scene
+
+                    inFunction = false;
+                }
+
+                alert(result.message);
             }
-            
             
         }
         // else if (gameObject.texture.key === 'SAVE'){
@@ -671,6 +687,74 @@ function generateLevel(context, current_level){
         poop_img.setScale(0.25);
     }
 
+    // var pipe = context.add.sprite(CELL_WIDTH*ObjectType.PIPE, CELL_WIDTH, 'PIPE').setInteractive();
+    //             pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+    //             context.input.setDraggable(pipe);
+    //             pipe.angle -= 90;
+
+    for (var i = 0; i < grid.length; i++) {
+        for (var j = 0; j < grid[0].length; j++) {
+            if(grid[i][j] instanceof GameEntity) {
+                console.log("In if")
+                console.log(grid[i][j]);         
+                switch(grid[i][j].kind_){
+                    case ObjectType.PIPE:
+                        var pipe = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'PIPE').setInteractive();
+                        context.input.setDraggable(pipe);
+                        pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.BENDLEFT:
+                        var bendleft = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'BENDLEFT').setInteractive();
+                        context.input.setDraggable(bendleft);
+                        bendleft.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.BENDRIGHT:
+                        var bendright = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'BENDRIGHT').setInteractive();
+                        context.input.setDraggable(bendright);
+                        bendright.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.DOUBLEDUAL:
+                        var doubledual = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'DOUBLEDUAL').setInteractive();
+                        context.input.setDraggable(doubledual);
+                        doubledual.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.DOUBLELEFT:
+                        var doubleleft = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'DOUBLELEFT').setInteractive();
+                        context.input.setDraggable(doubleleft);
+                        doubleleft.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.DOUBLERIGHT:
+                        var doubleright = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'DOUBLERIGHT').setInteractive();
+                        context.input.setDraggable(doubleright);
+                        doubleright.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                    break;
+                    case ObjectType.COOLER:
+                        var cooler = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'COOLER').setInteractive();
+                        context.input.setDraggable(cooler);
+                        cooler.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.TANK:
+                        var tank = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'TANK').setInteractive();
+                        context.input.setDraggable(tank);
+                        tank.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.FURNACE:
+                        var furnace = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'FURNACE').setInteractive();
+                        context.input.setDraggable(furnace);
+                        furnace.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    case ObjectType.CHECKPIPE:
+                        var checkpipe = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'CHECKPIPE').setInteractive();
+                        context.input.setDraggable(checkpipe);
+                        checkpipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+        
 
     //start
     //console.log(source_pos.x+1);

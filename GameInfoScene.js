@@ -57,6 +57,18 @@ class GameInfoScene extends Phaser.Scene {
         //     var poop_img = this.add.image(WIDTH-OFFSET-(4*CELL_WIDTH) + i*40, 750, 'POOP');
         //     poop_img.setScale(0.25);
         // }
+
+        /*
+        var tutorial_text;
+        switch(CURRENT_LEVEL){
+            case "1":
+                tutorial_text = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 655, `Water Properties:`, { font: "bold 15px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
+            break;
+
+            case "2":
+
+        }
+        */
     }
 }
 
