@@ -51,6 +51,7 @@ class GameInfoScene extends Phaser.Scene {
         //var water_phase_current_level = ( LEVELS[phase_str_].WATER_PHASE_LEVEL == 1 ? "WATER" : "STEAM");
         //var level_phase = infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 685, `Phase: ${water_phase_current_level}`, { font: "bold 11px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
 
+        infocontext.add.text(WIDTH-OFFSET-(4*CELL_WIDTH)-20, 750, "Some Icons Display More Info when CLICKED", { font: "bold 12px Arial", fill: "#00F", wordWrap: { width: 200, useAdvancedWrap: true } });
 
         // for (var i=0; i<water_purity_current_level; i++) {
         //     console.log("taking a dump")
