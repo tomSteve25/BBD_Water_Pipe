@@ -6,7 +6,7 @@ var TEMP_CURRENT_LEVEL;
 var start_x;
 var start_y;
 var tank_sprite;
-
+var pipedUsed = 0;
 // timestamps.
 var d;
 var text;
@@ -229,6 +229,8 @@ class GameScene extends Phaser.Scene {
             
             if (previous_y === 0){
                 AVAILABLE_OBJECTS[kind] -= 1;
+                pipedUsed +=1;
+                
                 console.log(AVAILABLE_OBJECTS)
             }
 
@@ -314,33 +316,41 @@ class GameScene extends Phaser.Scene {
             this.scene.start('WinScene');
             }else if (result.outcome && !inFunction){
                 switch (CURRENT_LEVEL) {
-
                     case 0:
-                        saveToLocal('L1Complete');
+                        saveToLocal('L1Complete', 0);
+                        saveToLocal('L1PipesUsed', pipedUsed);
                         break;
                     case 1:
-                        saveToLocal('L2Complete');
+                        saveToLocal('L2Complete', 0);
+                        saveToLocal('L2PipesUsed', pipedUsed);
                         break;
                     case 2:
-                        saveToLocal('L3Complete');
+                        saveToLocal('L3Complete', 0);
+                        saveToLocal('L3PipesUsed', pipedUsed);
                         break;
                     case 3:
-                        saveToLocal('L4Complete');
+                        saveToLocal('L4Complete', 0);
+                        saveToLocal('L4PipesUsed', pipedUsed);
                         break;
                     case 4:
-                        saveToLocal('L5Complete');
+                        saveToLocal('L5Complete', 0);
+                        saveToLocal('L5PipesUsed', pipedUsed);
                         break;
                     case 5:
-                        saveToLocal('L6Complete');
+                        saveToLocal('L6Complete', 0);
+                        saveToLocal('L6PipesUsed', pipedUsed);
                         break;
                     case 6:
-                        saveToLocal('L7Complete');
+                        saveToLocal('L7Complete', 0);
+                        saveToLocal('L7PipesUsed', pipedUsed);
                         break;
                     default:
                         break;
                 }
-                saveToLocal('hasMoved');
+                pipedUsed = 0 ;
+                saveToLocal('hasMoved', 0);
                 console.log(localStorage);
+                
 
                 //move on to the next level
                 CURRENT_LEVEL ++;
@@ -360,8 +370,35 @@ class GameScene extends Phaser.Scene {
             }
             alert(result.message);
         }else if (gameObject.texture.key === 'redo'){
+            pipedUsed = 0;
+                switch (CURRENT_LEVEL) {
+                    case 0:
+                        saveToLocal('L1RedoCount', 0);
+                        break;
+                    case 1:
+                        saveToLocal('L2RedoCount', 0);
+                        break;
+                    case 2:
+                        saveToLocal('L3RedoCount', 0);
+                        break;
+                    case 3:
+                        saveToLocal('L4RedoCount', 0);
+                        break;
+                    case 4:
+                        saveToLocal('L5RedoCount', 0);
+                        break;
+                    case 5:
+                        saveToLocal('L6RedoCount', 0);
+                        break;
+                    case 6:
+                        saveToLocal('L7RedoCount', 0);
+                        break;
+                    default:
+                        break;
+                }
             //redo current level
             grid = create_grid();
+            pipedUsed = 0;
             this.registry.destroy(); // destroy registry
             this.events.off(); // disable all active events
             this.scene.restart(); // restart current scene           
@@ -607,6 +644,7 @@ function generateLevel(context, current_level){
         var movables = LEVELS[current_level_str].MOVABLES;
     }
 
+    //loop to display amount of pieces
     for (var i = 0; i < movables.length; i++){
         var key = movables[i].type;
         AVAILABLE_OBJECTS[key] = movables[i].quantity;
