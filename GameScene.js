@@ -724,7 +724,7 @@ function create_sprites(context, number, type) {
         case ObjectType.FUNCTIONBLOCK:
             console.log("f: ", function_count);
             console.log("sc: ", second_click);
-            if (second_click && function_count==1){
+            if (second_click && function_count >= 1 ){
                 var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH*4, 'FUNCTIONBLOCK').setInteractive();
                 context.input.setDraggable(functionblock);
                 functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
@@ -941,9 +941,9 @@ function generateLevel(context, current_level){
                         // var functionblock = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'FUNCTIONBLOCK').setInteractive();
                         // context.input.setDraggable(functionblock);
                         // functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                        var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH, 'FUNCTIONBLOCK').setInteractive();
-                        context.input.setDraggable(functionblock);
-                        functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        // var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH, 'FUNCTIONBLOCK').setInteractive();
+                        // context.input.setDraggable(functionblock);
+                        // functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                         break;
                     default:
                         
