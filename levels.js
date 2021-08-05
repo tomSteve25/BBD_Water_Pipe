@@ -266,11 +266,23 @@ var LEVELS = {
 	},
 	"Function":{ //function grid
 		SOURCE:{y:7,x:5},
-		END:{y:10,x:10},
+		END:{y:7,x:7},
+		// END:{y:10,x:10},
 		WATER_PURITY_LEVEL:0,
 		WATER_PHASE_LEVEL:1,
 		IMMOVABLES:[],
-		MOVABLES:[]
+		MOVABLES:[
+			{type:ObjectType.PURIFIER,quantity:16},
+			{type:ObjectType.PIPE,quantity:16},
+			{type:ObjectType.FURNACE,quantity:16},
+			{type:ObjectType.COOLER,quantity:16},
+			{type:ObjectType.DOUBLERIGHT,quantity:16},
+			{type:ObjectType.DOUBLELEFT,quantity:16},
+			{type:ObjectType.DOUBLEDUAL,quantity:16},
+			{type:ObjectType.BENDRIGHT,quantity:16},
+			{type:ObjectType.BENDLEFT,quantity:16},
+			{type:ObjectType.CHECKPIPE,quantity:16}
+		]
 	},
 	// "10":{ //Basic level
 	// 	SOURCE:{y:3,x:3},

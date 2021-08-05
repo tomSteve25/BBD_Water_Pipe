@@ -1,5 +1,5 @@
 var runningFunctionBlock = false;
-var temp_nextPos;
+var temp_nextPos = {x:0, y:0, direction:0};
 
 // The object kinds 
 const ObjectType = {
@@ -867,8 +867,8 @@ class GameEntity
 				case Direction.NORTH:
 					if (this.phase_ === WaterPhase.STEAM)
 						return [{
-							y: this.position_.y-2,
-							x: this.position_.x+1,
+							y: this.position_.y-3,
+							x: this.position_.x+2,
 							direction: this.faceDirection_
 						}];
 					else
@@ -876,16 +876,16 @@ class GameEntity
 				break;
 				case Direction.EAST:
 					return [{
-						y: this.position_.y+1,
-						x: this.position_.x+2,
+						y: this.position_.y+2,
+						x: this.position_.x+3,
 						direction: this.faceDirection_
 					}] 
 				break;
 				case Direction.SOUTH:
 					if (this.phase_ === WaterPhase.WATER){
 						return [{
-								y: this.position_.y+2,
-								x: this.position_.x-1,
+								y: this.position_.y+3,
+								x: this.position_.x-2,
 								direction: this.faceDirection_
 						}]
 					}
@@ -893,8 +893,8 @@ class GameEntity
 				break;
 				case Direction.WEST:
 					return [{
-						y: this.position_.y-1,
-						x: this.position_.x-2,
+						y: this.position_.y-2,
+						x: this.position_.x-3,
 						direction: this.faceDirection_
 					}]
 				break;
@@ -911,10 +911,10 @@ class GameEntity
 		// 	return [{}]
 		// }
 		else if (this.kind_ === ObjectType.END){
-			console.log("This type is END")
+			console.log("This type is END");
 		}
 		else {
-			console.log("Unrecognised type")
+			console.log("Unrecognised type");
 			return [];
 		}
 			
@@ -1095,9 +1095,18 @@ function resetTravereCount(grid)
 
 // Checks if water from the given point reaches to the end CLEAN in all passages that connects the given point to the end
 //TODO	check temperature conditions
-function simulate(grid, currPos)
+function simulate(currPos)
 {
-	const currObject = grid[currPos.y][currPos.x];
+	var simulate_grid = (runningFunctionBlock ? function_grid : grid);
+	console.log(simulate_grid, grid, function_grid, runningFunctionBlock);
+
+	let currObject = simulate_grid[currPos.y][currPos.x];
+	let nextPos;
+	let nextObject;
+
+	console.log("currPos", currPos);
+	console.log("Water is now in", objectName(currObject.kind));
+	console.log(currObject);
 
 	// if (currPos.y === 0 && currPos.x === 18){
 	// 	console.log("NEW ERROR TRIGGERED")
@@ -1105,7 +1114,7 @@ function simulate(grid, currPos)
 	// }
 	
 	if (currObject.kind == ObjectType.SOURCE)
-		resetTravereCount(grid);
+		resetTravereCount(simulate_grid);
 
 	currObject.increaseTraversed();
 
@@ -1121,9 +1130,18 @@ function simulate(grid, currPos)
 	// If it is the end, we return true if the water if clean and false otherwise
 	if (currObject.kind === ObjectType.END)
 	{
-		if (runningFunctionBlock) {
+		if (runningFunctionBlock) { // at this point grid is function_grid
+			simulate_grid = grid;
 			runningFunctionBlock = false;
-			nextPos = temp_nextPos;
+			console.log("temp_nextPos", temp_nextPos);
+			currPos.x = temp_nextPos.x;
+			currPos.y = temp_nextPos.y;
+			currPos.direction = temp_nextPos.direction;
+			currObject.passWater(simulate_grid[currPos.y][currPos.x]);
+			currObject = simulate_grid[currPos.y][currPos.x];
+			console.log(simulate_grid);
+			console.log("currObject in runningfunctionblock", currObject);
+			
 		} else {
 			if (currObject.hasCleanWater)
 				return {outcome:true, message:"Clean water is supplied."}
@@ -1134,6 +1152,8 @@ function simulate(grid, currPos)
 	
 	// Otherwise if it is not the end we try move to the next position(s) connected to by the current object
 	const connectedPos = currObject.outPos(); //maybe selecting wrong out
+
+	console.log("connectedPos:", connectedPos);
 
 	if (connectedPos === errMsg.FROZEN) {
 		let err = `Water is frozen (` + currPos.x + `, ` + currPos.y + `)`;
@@ -1149,10 +1169,11 @@ function simulate(grid, currPos)
 	}
 
 	let result; 
+	
 	for (let i = 0; i < connectedPos.length; i++)
 	{
-		const nextPos = connectedPos[i];
-		const nextObject = grid[nextPos.y][nextPos.x];
+		nextPos = connectedPos[i];
+		nextObject = simulate_grid[nextPos.y][nextPos.x];
 		
 		// If the other end connects to nothing it is a loss
 		if (nextObject === null)
@@ -1171,12 +1192,25 @@ function simulate(grid, currPos)
 		if (nextObject.kind === ObjectType.FUNCTIONBLOCK){
 			runningFunctionBlock = true;
 
-			nextPos = temp_nextPos;
+			console.log("nextpos:", nextPos);
+			console.log("object at nextpos:", simulate_grid[nextPos.y][nextPos.x]);
+
+			temp_nextPos.x = nextPos.x;
+			temp_nextPos.y = nextPos.y;
+			temp_nextPos.direction = nextPos.direction;
+
+			
+			console.log("temp_nextPos:", temp_nextPos);
+
 			nextPos.y = 7;
 			nextPos.x = 6;
 			nextPos.direction = Direction.EAST;
 
-			nextObject = function_grid[7][6];
+			console.log("NEXT POS");
+			console.log(function_grid);
+			console.log(function_grid[nextPos.y][nextPos.x]);
+
+			nextObject = function_grid[nextPos.y][nextPos.x];
 		}
 
 		// Pass water to the next object 
@@ -1188,11 +1222,7 @@ function simulate(grid, currPos)
 			return {outcome:false, tank:true, tank_x:nextPos.x, tank_y:nextPos.y, message:`Tank reached.`, err:`Tank reached.`};
 		}
 		
-		if (runningFunctionBlock) {
-			result = simulate(function_grid, nextPos);
-		} else {
-			result = simulate(grid, nextPos);
-		}
+		result = simulate(nextPos);
 		
 		
 		if (!result.outcome)

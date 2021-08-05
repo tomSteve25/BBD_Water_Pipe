@@ -12,6 +12,7 @@ var d;
 var text;
 var timedEvent;
 var lapTime;
+var second_click = false;
 
 //Functions
 var inFunction = false;
@@ -142,15 +143,13 @@ class GameScene extends Phaser.Scene {
         console.log("y:" + previous_y);
         console.log(ObjectType.FUNCTIONBLOCK);
         if(getKind(gameObject) === ObjectType.FUNCTIONBLOCK && previous_y != 0){
-            console.log("HELLO");
-            grid[previous_y-1][previous_x] = null;
-            grid[previous_y-1][previous_x+1] = null;
-            grid[previous_y+1][previous_x] = null;
-            grid[previous_y+1][previous_x+1] = null;
-            grid[previous_y][previous_x+1] = null;
-            grid[previous_y][previous_x-1] = null;
-            grid[previous_y+1][previous_x-1] = null;
-            grid[previous_y-1][previous_x-1] = null;
+            for(var i = 0; i < grid.length; i++){
+                for(var j = 0; j < grid[0].length; j++){
+                    //console.log(grid[i][j]);
+                    if(grid[i][j] == -2 || (grid[i][j] instanceof GameEntity && grid[i][j].kind === ObjectType.FUNCTIONBLOCK))
+                        grid[i][j] = null;
+                }
+            }
         }
 
         gameObject.angle += 90;
@@ -241,21 +240,48 @@ class GameScene extends Phaser.Scene {
             grid[previous_y][previous_x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
         }else{ // placeable grid location
             //sets the new grid position as true (i.e. occupied)
-            grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             console.log("y  : " + y);
             console.log("x: " + x);
-            console.log(kind);
+            console.log(gameObject);
             if(kind === ObjectType.FUNCTIONBLOCK){ //TODO figure out wtf is happening
                 console.log("FUntionssss");
-                grid[y-1][x] = -1;
-                grid[y-1][x+1] = -1;
-                grid[y+1][x] = -1;
-                grid[y+1][x+1] = -1;
-                grid[y][x+1] = -1;
-                grid[y][x-1] = -1;
-                grid[y+1][x-1] = -1;
-                grid[y-1][x-1] = -1;
+
+                grid[y][x] = -2;
+                grid[y-1][x] = -2;
+                grid[y-1][x+1] = -2;
+                grid[y+1][x] = -2;
+                grid[y+1][x+1] = -2;
+                grid[y][x+1] = -2;
+                grid[y][x-1] = -2;
+                grid[y+1][x-1] = -2;
+                grid[y-1][x-1] = -2;
+
+                switch (direction) {
+                    case Direction.NORTH:
+                        console.log("NORTH");
+                        grid[y+1][x-1] = new GameEntity(kind, 1, 1, direction, {y: y+1, x: x-1});
+                        break;
+
+                    case Direction.EAST:
+                        console.log("EAST");
+                        grid[y-1][x-1] = new GameEntity(kind, 1, 1, direction, {y: y-1, x: x-1});
+                        break;
+                        
+                    case Direction.SOUTH:
+                        console.log("SOUTH");
+                        grid[y-1][x+1] = new GameEntity(kind, 1, 1, direction, {y: y-1, x: x+1});
+                        break;
+                    
+                    case Direction.WEST:
+                        console.log("WEST");
+                        grid[y+1][x+1] = new GameEntity(kind, 1, 1, direction, {y: y+1, x: x+1});
+                        break;
+
+                }
+            } else {
+                grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
             }
+
             if (previous_y === 0){
                 AVAILABLE_OBJECTS[kind] -= 1;
                 pipedUsed +=1;
@@ -296,6 +322,8 @@ class GameScene extends Phaser.Scene {
             // saveBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'SAVE').setOrigin(0,0);
             // saveBtn.setInteractive();
             // saveBtn.setScale(0.3);
+
+            console.log();
             
             if(!inFunction){
                 functionBtn.setTexture("FUNCTIONCALL");
@@ -316,8 +344,10 @@ class GameScene extends Phaser.Scene {
                 inFunction = true;
             } 
             else {
-                let result = simulate(grid, {y: start_y, x: start_x});
+                console.log(grid);
+                let result = simulate({y: start_y, x: start_x});
 
+                console.log(result);
                 if (result.outcome) {
                 // if (true) {
 
@@ -343,8 +373,10 @@ class GameScene extends Phaser.Scene {
                     this.scene.restart('GameScene'); // restart current scene
 
                     inFunction = false;
+                    console.log("second click");
+                    
                 }
-
+                
                 alert(result.message);
             }
             
@@ -356,7 +388,8 @@ class GameScene extends Phaser.Scene {
         //     functionBtn.setScale(0.3);
         // }
         else if (gameObject.texture.key === 'run'){
-            let result = simulate(grid, {y: start_y, x: start_x});
+            console.log("SIMULATING!!!!!");
+            let result = simulate({y: start_y, x: start_x});
             if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
             this.scene.start('WinScene');
             }else if (result.outcome && !inFunction){
@@ -579,10 +612,7 @@ function create_sprites(context, number, type) {
             }
             break;
         case ObjectType.FUNCTIONBLOCK:
-            var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH, 'FUNCTIONBLOCK').setInteractive();
-            functionblock.anchor.x = 
-            context.input.setDraggable(functionblock);
-            functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            
             break;
         default:
           // code block
@@ -783,12 +813,14 @@ function generateLevel(context, current_level){
                         checkpipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                         break;
                     case ObjectType.FUNCTIONBLOCK:
-                        var functionblock = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'FUNCTIONBLOCK').setInteractive();
-                        
-                        context.input.setDraggable(functionblock);
-                        functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        // var functionblock = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'FUNCTIONBLOCK').setInteractive();
+                        // context.input.setDraggable(functionblock);
+                        // functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                         break;
                     default:
+                        var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH, 'FUNCTIONBLOCK').setInteractive();
+                        context.input.setDraggable(functionblock);
+                        functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                         break;
                 }
             }
