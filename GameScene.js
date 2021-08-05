@@ -19,7 +19,7 @@ var text;
 var timedEvent;
 var lapTime;
 var second_click = false;
-var f = 0;
+var function_count = 0;
 
 //Functions
 var inFunction = false;
@@ -121,11 +121,9 @@ class GameScene extends Phaser.Scene {
     binBtn.setScale(0.05);
 
     //Function button
-    var functionBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'FUNCTIONCALL').setOrigin(0,0);
-    functionBtn.setInteractive();
-    functionBtn.setScale(0.3);
-
+    
     var saveBtn;
+    var functionBtn;
 
   
 
@@ -387,7 +385,7 @@ class GameScene extends Phaser.Scene {
             console.log();
             
             if(!inFunction){
-                functionBtn.setTexture("FUNCTIONCALL");
+                // functionBtn.setTexture("FUNCTIONCALL");
                 console.log("Function call: true");
                 temp_grid = grid;
                 console.log("Temp_grid:");
@@ -407,7 +405,7 @@ class GameScene extends Phaser.Scene {
                 
             } 
             else {
-                functionBtn.setTexture("SAVE");
+                // functionBtn.setTexture("SAVE");
                 console.log("Function call: false");
 
                 //SAVE FUNCTION GRID
@@ -428,8 +426,10 @@ class GameScene extends Phaser.Scene {
                 inFunction = false;
                 console.log("second click");
                 second_click = true;
-                f++;
+                function_count++;
                 // create_sprites(this.scene, 1, ObjectType.FUNCTIONBLOCK);
+
+                console.log("Function_grid", function_grid);
             }
             
         }
@@ -447,6 +447,7 @@ class GameScene extends Phaser.Scene {
                 if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
                 this.scene.start('WinScene');
                 }else if (result.outcome && !inFunction){
+                    function_count = 0;
                     switch (CURRENT_LEVEL) {
                         case 0:
                             saveToLocal('L1Complete', 0);
@@ -495,7 +496,8 @@ class GameScene extends Phaser.Scene {
                     this.scene.restart('GameScene'); // restart current scene
                 }
             }
-            else if (result.tank) {
+            if (result.tank) {
+                console.log("WE GOT TO THE TANK!!");
                 start_x = result.tank_x;
                 start_y = result.tank_y;
                 
@@ -503,6 +505,7 @@ class GameScene extends Phaser.Scene {
             }
             alert(result.message);
         }else if (gameObject.texture.key === 'redo'){
+            function_count = 0;
             pipedUsed = 0;
                 switch (CURRENT_LEVEL) {
                     case 0:
@@ -709,7 +712,9 @@ function create_sprites(context, number, type) {
             }
             break;
         case ObjectType.FUNCTIONBLOCK:
-            if (second_click && f==1){
+            console.log("f: ", function_count);
+            console.log("sc: ", second_click);
+            if (second_click && function_count==1){
                 var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH*4, 'FUNCTIONBLOCK').setInteractive();
                 context.input.setDraggable(functionblock);
                 functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
@@ -814,6 +819,12 @@ function generateLevel(context, current_level){
     var end_pos = LEVELS[current_level_str].END;
     var end2_pos = LEVELS[current_level_str].END2;
     var immovables = LEVELS[current_level_str].IMMOVABLES;
+
+    if(LEVELS[current_level_str].FUNCTION === true){
+        functionBtn = context.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'FUNCTIONCALL').setOrigin(0,0);
+        functionBtn.setInteractive();
+        functionBtn.setScale(0.3);
+    }
     
     // if (current_level_str == "Function") {
     //     console.log(String(TEMP_CURRENT_LEVEL))

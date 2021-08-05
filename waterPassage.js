@@ -1202,8 +1202,8 @@ function simulate(currPos)
 			
 			console.log("temp_nextPos:", temp_nextPos);
 
-			nextPos.y = 7;
-			nextPos.x = 6;
+			nextPos.y = 6;
+			nextPos.x = 5;
 			nextPos.direction = Direction.EAST;
 
 			console.log("NEXT POS");
