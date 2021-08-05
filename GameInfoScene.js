@@ -142,7 +142,7 @@ function update_text(simulate_outcome_){
     if (itank) {
         count_texts.tank_text.destroy();
         var itanky = itank.y;
-        count_texts.tank_text = infocontext.add.text(text_x, itanky, `Tank: ${AVAILABLE_OBJECTS[ObjectType.COOLER]}`, style);}
+        count_texts.tank_text = infocontext.add.text(text_x, itanky, `Tank: ${AVAILABLE_OBJECTS[ObjectType.TANK]}`, style);}
         // if (purity_text){
     //     console.log("UPDATED!!!!!!!!!!!!!")
     //     if (simulate_outcome.outcome === undefined){

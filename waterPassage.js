@@ -1216,7 +1216,6 @@ function simulate(currPos)
 		// Pass water to the next object 
 		currObject.passWater(nextObject);
 
-		// TODO test tank has correct properties
 		if(nextObject.kind === ObjectType.TANK){
 			console.log("TANK REACHED")
 			return {outcome:false, tank:true, tank_x:nextPos.x, tank_y:nextPos.y, message:`Tank reached.`, err:`Tank reached.`};

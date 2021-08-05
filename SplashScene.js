@@ -9,22 +9,26 @@ class SplashScene extends Phaser.Scene {
     }
 
     preload (){
-        this.load.image('HowTo', 'assets/HowTo.png');
-        
+        this.load.image('HowTo_1', 'assets/HowTopage_1.png');
+        this.load.image('HowTo_2', 'assets/HowTopage_2.png');
+        this.load.image('HowTo_3', 'assets/HowTopage_3.png');
     }
         
     create(){
-        var howTo = this.add.sprite(0, 0, 'HowTo').setOrigin(0,0).setInteractive();
-
-        window.localStorage.clear();
-
+        var howTo = this.add.sprite(0, 0, 'HowTo_1').setOrigin(0,0).setInteractive();
+        var pageNum = 1;
+        
         this.input.on('gameobjectdown', function(pointer, gameObject){
-
-            saveToLocal('StartGame');
-                
-            this.scene.start('GameScene');//.launch('GameInfoScene');
-            
-            
+            if(pageNum == 1){
+                howTo = this.add.sprite(0, 0, 'HowTo_2').setOrigin(0,0).setInteractive();
+            }
+            else if(pageNum == 2){
+                howTo = this.add.sprite(0, 0, 'HowTo_3').setOrigin(0,0).setInteractive();
+            }
+            else{
+                this.scene.start('GameScene');//.launch('GameInfoScene');
+            }
+            pageNum++;
         }, this);
     }
 
