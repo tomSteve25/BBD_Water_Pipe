@@ -190,8 +190,8 @@ function create_sprites_info_icons(context, number, type) {
             icheck_pipe = context.add.sprite(x, y*5.5, 'CHECKPIPE');
             icheck_pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
             count_texts.checkpipe_text = context.add.text(text_x, icheck_pipe.y, `Separator: ${AVAILABLE_OBJECTS[type]}`, style);
-             icheck.setInteractive();
-                                    icheck.on('pointerdown', function (pointer) {
+             icheck_pipe.setInteractive();
+                                    icheck_pipe.on('pointerdown', function (pointer) {
                                         document.getElementById('seperatorInfo').click();
                                     });
             break;
