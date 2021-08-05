@@ -18,59 +18,27 @@ let timestamps = [
   { id: 'L7Complete', TimeStamp: "" },//15
   { id: 'L8FirstMove', TimeStamp: "" },//16
   { id: 'L8Complete', TimeStamp: "" },//17
-  { id: 'L9FirstMove', TimeStamp: "" },//18
-  { id: 'L9Complete', TimeStamp: "" },//19
-  { id: 'L10FirstMove', TimeStamp: "" },//20
-  { id: 'L10omplete', TimeStamp: "" },//21
-  { id: 'L11FirstMove', TimeStamp: "" },//22
-  { id: 'L11Complete', TimeStamp: "" },//23
-  { id: 'L12FirstMove', TimeStamp: "" },//24
-  { id: 'L12Complete', TimeStamp: "" },//25
-  { id: 'L13FirstMove', TimeStamp: "" },//26
-  { id: 'L13Complete', TimeStamp: "" },//27
-  { id: 'L14FirstMove', TimeStamp: "" },//28
-  { id: 'L14Complete', TimeStamp: "" },//29
-  { id: 'L15FirstMove', TimeStamp: "" },//30
-  { id: 'L15Complete', TimeStamp: "" },//31
-  { id: 'L16FirstMove', TimeStamp: "" },//32
-  { id: 'L16Complete', TimeStamp: "" },//33
-  { id: 'EndGame', TimeStamp: "" },//34
+  { id: 'EndGame', TimeStamp: "" },//18
 
   // redoes.
-  { id: 'L1RedoCount', Count: 0 },//35
-  { id: 'L2RedoCount', Count: 0 },//36
-  { id: 'L3RedoCount', Count: 0 },//37
-  { id: 'L4RedoCount', Count: 0 },//38
-  { id: 'L5RedoCount', Count: 0 },//39
-  { id: 'L6RedoCount', Count: 0 },//40
-  { id: 'L7RedoCount', Count: 0 },//41
-  { id: 'L8RedoCount', Count: 0 },//42
-  { id: 'L9RedoCount', Count: 0 },//43
-  { id: 'L10RedoCount', Count: 0 },//44
-  { id: 'L11RedoCount', Count: 0 },//45
-  { id: 'L12RedoCount', Count: 0 },//46
-  { id: 'L13RedoCount', Count: 0 },//47
-  { id: 'L14RedoCount', Count: 0 },//48
-  { id: 'L15RedoCount', Count: 0 },//49
-  { id: 'L16RedoCount', Count: 0 },//50
+  { id: 'L1RedoCount', Count: 0 },//19
+  { id: 'L2RedoCount', Count: 0 },//20
+  { id: 'L3RedoCount', Count: 0 },//21
+  { id: 'L4RedoCount', Count: 0 },//22
+  { id: 'L5RedoCount', Count: 0 },//23
+  { id: 'L6RedoCount', Count: 0 },//24
+  { id: 'L7RedoCount', Count: 0 },//25
+  { id: 'L8RedoCount', Count: 0 },//26
   
   // pipes used.
-  { id: 'L1PipesUsed', Count: 0 },//51
-  { id: 'L2PipesUsed', Count: 0 },//52
-  { id: 'L3PipesUsed', Count: 0 },//53
-  { id: 'L4PipesUsed', Count: 0 },//54
-  { id: 'L5PipesUsed', Count: 0 },//55
-  { id: 'L6PipesUsed', Count: 0 },//56
-  { id: 'L7PipesUsed', Count: 0 },//57
-  { id: 'L8PipesUsed', Count: 0 },//58
-  { id: 'L9PipesUsed', Count: 0 },//59
-  { id: 'L10PipesUsed', Count: 0 },//60
-  { id: 'L11PipesUsed', Count: 0 },//61
-  { id: 'L12PipesUsed', Count: 0 },//62
-  { id: 'L13PipesUsed', Count: 0 },//63
-  { id: 'L14PipesUsed', Count: 0 },//64
-  { id: 'L15PipesUsed', Count: 0 },//65
-  { id: 'L16PipesUsed', Count: 0 },//66
+  { id: 'L1PipesUsed', Count: 0 },//27
+  { id: 'L2PipesUsed', Count: 0 },//28
+  { id: 'L3PipesUsed', Count: 0 },//29
+  { id: 'L4PipesUsed', Count: 0 },//30
+  { id: 'L5PipesUsed', Count: 0 },//31
+  { id: 'L6PipesUsed', Count: 0 },//32
+  { id: 'L7PipesUsed', Count: 0 },//33
+  { id: 'L8PipesUsed', Count: 0 },//34
   
 ]
 
@@ -88,11 +56,11 @@ function saveToLocal(keyValue, numPipesUsed) {
     }
   }
   // timestamps.
-  else if (objIndex >= 1 && objIndex <= 34){
+  else if (objIndex >= 1 && objIndex <= 18){
     timestamps[objIndex].TimeStamp = Date.now();
   } 
   // redo count.
-  else if (objIndex >= 35 && objIndex <= 50){
+  else if (objIndex >= 19 && objIndex <= 26){
     timestamps[objIndex].Count += 1;
   }
   // piped used.
@@ -112,8 +80,8 @@ function saveToLocal(keyValue, numPipesUsed) {
 function getTotalTimeSeconds() {
   var startTS = new Date(timestamps[1].TimeStamp);
   var endTS;
-  if (timestamps[16].TimeStamp != "") {
-    endTS = new Date(timestamps[34].TimeStamp);
+  if (timestamps[1].TimeStamp != "") {
+    endTS = new Date(timestamps[18].TimeStamp);
     return (endTS.getTime() - startTS.getTime()) / 1000;
   }
   else {
@@ -130,7 +98,7 @@ function Results(){
   
 
 //Total game Time
-   var resultsForDisplay =  calcTime(new Date(timestamps[34].TimeStamp),1) ;
+   var resultsForDisplay =  calcTime(new Date(timestamps[18].TimeStamp),1) ;
    document.getElementById("TotalTime").innerHTML = resultsForDisplay;
 //Level Times
    resultsForDisplay =  calcTime(new Date(timestamps[3].TimeStamp),2);
@@ -149,58 +117,28 @@ function Results(){
    document.getElementById("L7Time").innerHTML = resultsForDisplay;
    resultsForDisplay =  calcTime(new Date(timestamps[17].TimeStamp),16);
    document.getElementById("L8Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[19].TimeStamp),18);
-   document.getElementById("L9Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[21].TimeStamp),20);
-   document.getElementById("L10Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[23].TimeStamp),22);
-   document.getElementById("L11Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[25].TimeStamp),24);
-   document.getElementById("L12Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[27].TimeStamp),26);
-   document.getElementById("L13Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[29].TimeStamp),28);
-   document.getElementById("L14Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[31].TimeStamp),30);
-   document.getElementById("L15Time").innerHTML = resultsForDisplay;
-   resultsForDisplay =  calcTime(new Date(timestamps[33].TimeStamp),32);
-   document.getElementById("L16Time").innerHTML = resultsForDisplay;
    
 //redos per level
-  document.getElementById("L1Redos").innerHTML = (timestamps[35].Count);
-  document.getElementById("L2Redos").innerHTML = (timestamps[36].Count);
-  document.getElementById("L3Redos").innerHTML = (timestamps[37].Count);
-  document.getElementById("L4Redos").innerHTML = (timestamps[38].Count);
-  document.getElementById("L5Redos").innerHTML = (timestamps[39].Count);
-  document.getElementById("L6Redos").innerHTML = (timestamps[40].Count);
-  document.getElementById("L7Redos").innerHTML = (timestamps[41].Count);
-  document.getElementById("L8Redos").innerHTML = (timestamps[42].Count);
-  document.getElementById("L9Redos").innerHTML = (timestamps[43].Count);
-  document.getElementById("L10Redos").innerHTML = (timestamps[44].Count);
-  document.getElementById("L11Redos").innerHTML = (timestamps[45].Count);
-  document.getElementById("L12Redos").innerHTML = (timestamps[46].Count);
-  document.getElementById("L13Redos").innerHTML = (timestamps[47].Count);
-  document.getElementById("L14Redos").innerHTML = (timestamps[48].Count);
-  document.getElementById("L15Redos").innerHTML = (timestamps[49].Count);
-  document.getElementById("L16Redos").innerHTML = (timestamps[50].Count);
+  document.getElementById("L1Redos").innerHTML = (timestamps[19].Count);
+  document.getElementById("L2Redos").innerHTML = (timestamps[20].Count);
+  document.getElementById("L3Redos").innerHTML = (timestamps[21].Count);
+  document.getElementById("L4Redos").innerHTML = (timestamps[22].Count);
+  document.getElementById("L5Redos").innerHTML = (timestamps[23].Count);
+  document.getElementById("L6Redos").innerHTML = (timestamps[24].Count);
+  document.getElementById("L7Redos").innerHTML = (timestamps[25].Count);
+  document.getElementById("L8Redos").innerHTML = (timestamps[26].Count);
+  
   
 //# of pipes used per level
-  document.getElementById("L1Pipes").innerHTML = (timestamps[51].Count);
-  document.getElementById("L2Pipes").innerHTML = (timestamps[52].Count);
-  document.getElementById("L3Pipes").innerHTML = (timestamps[53].Count);
-  document.getElementById("L4Pipes").innerHTML = (timestamps[54].Count);
-  document.getElementById("L5Pipes").innerHTML = (timestamps[55].Count);
-  document.getElementById("L6Pipes").innerHTML = (timestamps[56].Count);
-  document.getElementById("L7Pipes").innerHTML = (timestamps[57].Count);
-  document.getElementById("L8Pipes").innerHTML = (timestamps[58].Count);
-  document.getElementById("L9Pipes").innerHTML = (timestamps[59].Count);
-  document.getElementById("L10Pipes").innerHTML = (timestamps[60].Count);
-  document.getElementById("L11Pipes").innerHTML = (timestamps[61].Count);
-  document.getElementById("L12Pipes").innerHTML = (timestamps[62].Count);
-  document.getElementById("L13Pipes").innerHTML = (timestamps[63].Count);
-  document.getElementById("L14Pipes").innerHTML = (timestamps[64].Count);
-  document.getElementById("L15Pipes").innerHTML = (timestamps[65].Count);
-  document.getElementById("L16Pipes").innerHTML = (timestamps[66].Count);
+  document.getElementById("L1Pipes").innerHTML = (timestamps[27].Count);
+  document.getElementById("L2Pipes").innerHTML = (timestamps[28].Count);
+  document.getElementById("L3Pipes").innerHTML = (timestamps[29].Count);
+  document.getElementById("L4Pipes").innerHTML = (timestamps[30].Count);
+  document.getElementById("L5Pipes").innerHTML = (timestamps[31].Count);
+  document.getElementById("L6Pipes").innerHTML = (timestamps[32].Count);
+  document.getElementById("L7Pipes").innerHTML = (timestamps[33].Count);
+  document.getElementById("L8Pipes").innerHTML = (timestamps[34].Count);
+  
   
 }
 
