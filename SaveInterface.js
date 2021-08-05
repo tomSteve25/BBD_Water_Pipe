@@ -145,6 +145,8 @@ function Results(){
 function calcTime(date, startIndex) {
   var startDate = timestamps[startIndex].TimeStamp;
   if (startDate != '') {
+    console.log(new Date(date));
+    console.log(new Date(timestamps[startIndex].TimeStamp));
     var startTS = new Date(timestamps[startIndex].TimeStamp);
     let totalSeconds = (date.getTime() - startTS.getTime()) / 1000;      // seconds
     let hours = Math.floor(totalSeconds / 3600);

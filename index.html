@@ -16,13 +16,86 @@
     <script src="WinScene.js"></script>
     <script src="main.js"></script>
     <script src="SaveInterface.js"></script>
+
 </head>
 
 <body>
-    <button type="button" onclick="Results(); window.location.href='#demo-modal'; " style="float: right;">
+    <!-- Show Scores Button -->
+    <button id="showScore" type="button" onclick="Results(); window.location.href='#demo-modal'; "
+        style="float: right;">
         <a href="#demo-modal" class="button">Show Scores</a>
     </button>
 
+    <!-- Seperator Button -->
+    <button onclick="window.location.href='#second-demo-modal'; " style="float: right; visibility: hidden;"
+        id="seperatorInfo">
+        <a href="#second-demo-modal" class="button">Info</a>
+    </button>
+    <!-- Cooler Button -->
+    <button onclick="window.location.href='#third-demo-modal'; " style="float: right; visibility: hidden;"
+        id="coolerInfo">
+        <a href="#third-demo-modal" class="button">Info</a>
+    </button>
+    <!-- Storage Button -->
+    <button onclick="window.location.href='#forth-demo-modal'; " style="float: right; visibility: hidden;"
+        id="storageInfo">
+        <a href="#forth-demo-modal" class="button">Info</a>
+    </button>
+
+    <!-- Modal (Storage) -->
+    <div id="forth-demo-modal" class="modal">
+        <div class="modal__content">
+            <h3>
+                Water Storage
+            </h3>
+            <div>
+                <img src="./assets/storageVid.gif" style="display: block; margin: auto auto;" width="500px"height="300px">
+                <img src="./assets/storage.PNG" style="display: block; margin: auto auto;">
+                <img src="./assets/storageTwo.PNG" style="display: block; margin: auto auto;">
+            </div>
+            <div class="table-wrapper">
+                <a href="#" class="modal__close">&times;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal (Cooler) -->
+    <div id="third-demo-modal" class="modal">
+        <div class="modal__content">
+            <h3>
+                Cooler
+            </h3>
+            <div>
+                <img src="./assets/coolerInfo.PNG" style="display: block; margin: auto auto;">
+            </div>
+            <div class="table-wrapper">
+                <a href="#" class="modal__close">&times;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal (Seperator) -->
+    <div id="second-demo-modal" class="modal">
+
+        <div class="modal__content">
+            <h3 style="align-content: center;">
+                Seperator
+            </h3>
+            <div>
+                <img src="./assets/separator_clean.PNG" style="display: block; margin: auto auto;" width="120px"
+                    height="120px">
+                <img src="./assets/separator_dirty.PNG" style="display: block; margin: auto auto;" width="120px"
+                    height="120px">
+            </div>
+
+            <div class="table-wrapper">
+                <a href="#" class="modal__close">&times;</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal (Score) -->
     <div id="demo-modal" class="modal">
         <div class="modal__content">
             <div class="table-wrapper">
@@ -87,56 +160,7 @@
                             <td id="L8Pipes">Content 2</td>
                             <td id="L8Redos">Content 2</td>
                         </tr>
-                        <tr>
-                            <td>9</td>
-                            <td id="L9Time">2</td>
-                            <td id="L9Pipes">Content 2</td>
-                            <td id="L9Redos">Content 2</td>
-                        </tr>
-                        <tr>
-                            <td>10</td>
-                            <td id="L10Time">2</td>
-                            <td id="L10Pipes">Content 2</td>
-                            <td id="L10Redos">Content 2</td>
-                        </tr>
-                        <tr>
-                            <td>11</td>
-                            <td id="L11Time">2</td>
-                            <td id="L11Pipes">Content 2</td>
-                            <td id="L11Redos">Content 2</td>
-                        </tr>
-                        <tr>
-                            <td>12</td>
-                            <td id="L12Time">2</td>
-                            <td id="L12Pipes">Content 2</td>
-                            <td id="L12Redos">Content 2</td>
-                        </tr>
-                        <tr>
-                            <td>13</td>
-                            <td id="L13Time">2</td>
-                            <td id="L13Pipes">Content 2</td>
-                            <td id="L13Redos">Content 2</td>
-                        </tr>
-                        <tr>
-                            <td>14</td>
-                            <td id="L14Time">2</td>
-                            <td id="L14Pipes">Content 2</td>
-                            <td id="L14Redos">Content 2</td>
-                        </tr>
-                        <tr>
-                            <td>15</td>
-                            <td id="L15Time">2</td>
-                            <td id="L15Pipes">Content 2</td>
-                            <td id="L15Redos">Content 2</td>
-                        </tr>
-                        <tr>
-                            <td>16</td>
-                            <td id="L16Time">2</td>
-                            <td id="L16Pipes">Content 2</td>
-                            <td id="L16Redos">Content 2</td>
-                        </tr>
                     <tbody>
-                        
                 </table>
                 <a href="#" class="modal__close">&times;</a>
             </div>
@@ -145,25 +169,34 @@
             <p>Functions: Average (score: 65%)</p>
             <p>Loops: Acceptable (score: 51%)</p>
             <h1>Overall Score: 70.25%</h1>
- 
+
             <h3 class="center">
                 Overall: Good enough to be a BBDer.
             </h3>
-            <img class="center" src="waterBlock.gif" alt="" >
-          
+            <img class="center" src="waterBlock.gif" alt="">
         </div>
 </body>
 
 </html>
 <style>
-     /* Image */
-     .center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
+    /* Image */
+    .images_separator {
+        display: flex;
+        flex-direction: row;
+    }
 
+    .images_separator_child {
+        width: 300px;
+        height: 300px;
+        flex: 1;
+    }
+
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
 
     /* Table Styles */
     * {
@@ -343,7 +376,8 @@
         border-radius: 4px;
     }
 
-    /* Popup */
+    /* Modals */
+    /* Score Original */
     .modal {
 
         visibility: hidden;
@@ -377,6 +411,7 @@
     }
 
     .modal__close {
+        font-size: 42px;
         position: absolute;
         top: 10px;
         right: 10px;

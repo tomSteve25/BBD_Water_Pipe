@@ -17,7 +17,7 @@ class SplashScene extends Phaser.Scene {
     create(){
         var howTo = this.add.sprite(0, 0, 'HowTo_1').setOrigin(0,0).setInteractive();
         var pageNum = 1;
-        
+        window.localStorage.clear();
         this.input.on('gameobjectdown', function(pointer, gameObject){
             if(pageNum == 1){
                 howTo = this.add.sprite(0, 0, 'HowTo_2').setOrigin(0,0).setInteractive();
@@ -29,6 +29,7 @@ class SplashScene extends Phaser.Scene {
                 this.scene.start('GameScene');//.launch('GameInfoScene');
             }
             pageNum++;
+            saveToLocal('StartGame');
         }, this);
     }
 

@@ -184,26 +184,29 @@ class GameScene extends Phaser.Scene {
           if (resultTS == false){
               switch (CURRENT_LEVEL) {
 
-                  case 0:
+                  case 1:
                       saveToLocal('L1FirstMove');
                       break;
-                  case 1:
+                  case 2:
                       saveToLocal('L2FirstMove');
                       break;
-                  case 2:
+                  case 3:
                       saveToLocal('L3FirstMove');
                       break;
-                  case 3:
+                  case 4:
                       saveToLocal('L4FirstMove');
                       break;
-                  case 4:
+                  case 5:
                       saveToLocal('L5FirstMove');
                       break;
-                  case 5:
+                  case 6:
                       saveToLocal('L6FirstMove');
                       break;
-                  case 6:
+                  case 7:
                       saveToLocal('L7FirstMove');
+                      break;
+                    case 8:
+                      saveToLocal('L8FirstMove');
                       break;
                   default:
               }
@@ -449,33 +452,37 @@ class GameScene extends Phaser.Scene {
                 }else if (result.outcome && !inFunction){
                     function_count = 0;
                     switch (CURRENT_LEVEL) {
-                        case 0:
+                        case 1:
                             saveToLocal('L1Complete', 0);
                             saveToLocal('L1PipesUsed', pipedUsed);
                             break;
-                        case 1:
+                        case 2:
                             saveToLocal('L2Complete', 0);
                             saveToLocal('L2PipesUsed', pipedUsed);
                             break;
-                        case 2:
+                        case 3:
                             saveToLocal('L3Complete', 0);
                             saveToLocal('L3PipesUsed', pipedUsed);
                             break;
-                        case 3:
+                        case 4:
                             saveToLocal('L4Complete', 0);
                             saveToLocal('L4PipesUsed', pipedUsed);
                             break;
-                        case 4:
+                        case 5:
                             saveToLocal('L5Complete', 0);
                             saveToLocal('L5PipesUsed', pipedUsed);
                             break;
-                        case 5:
+                        case 6:
                             saveToLocal('L6Complete', 0);
                             saveToLocal('L6PipesUsed', pipedUsed);
                             break;
-                        case 6:
+                        case 7:
                             saveToLocal('L7Complete', 0);
                             saveToLocal('L7PipesUsed', pipedUsed);
+                            break;
+                        case 8:
+                            saveToLocal('L8Complete', 0);
+                            saveToLocal('L8PipesUsed', pipedUsed);
                             break;
                         default:
                             break;
@@ -508,26 +515,29 @@ class GameScene extends Phaser.Scene {
             function_count = 0;
             pipedUsed = 0;
                 switch (CURRENT_LEVEL) {
-                    case 0:
+                    case 1:
                         saveToLocal('L1RedoCount', 0);
                         break;
-                    case 1:
+                    case 2:
                         saveToLocal('L2RedoCount', 0);
                         break;
-                    case 2:
+                    case 3:
                         saveToLocal('L3RedoCount', 0);
                         break;
-                    case 3:
+                    case 4:
                         saveToLocal('L4RedoCount', 0);
                         break;
-                    case 4:
+                    case 5:
                         saveToLocal('L5RedoCount', 0);
                         break;
-                    case 5:
+                    case 6:
                         saveToLocal('L6RedoCount', 0);
                         break;
-                    case 6:
+                    case 7:
                         saveToLocal('L7RedoCount', 0);
+                        break;
+                    case 8:
+                        saveToLocal('L8RedoCount', 0);
                         break;
                     default:
                         break;

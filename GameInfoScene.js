@@ -190,6 +190,10 @@ function create_sprites_info_icons(context, number, type) {
             icheck_pipe = context.add.sprite(x, y*5.5, 'CHECKPIPE');
             icheck_pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
             count_texts.checkpipe_text = context.add.text(text_x, icheck_pipe.y, `Separator: ${AVAILABLE_OBJECTS[type]}`, style);
+             icheck.setInteractive();
+                                    icheck.on('pointerdown', function (pointer) {
+                                        document.getElementById('seperatorInfo').click();
+                                    });
             break;
         case ObjectType.DOUBLEDUAL:
             idouble_pipe_dual = context.add.sprite(x, y*7, 'DOUBLEDUAL');
@@ -220,11 +224,21 @@ function create_sprites_info_icons(context, number, type) {
             icooler = context.add.sprite(x, y*14.5, 'COOLER');
             icooler.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
             count_texts.cooler_text = context.add.text(text_x, icooler.y, `Cooler: ${AVAILABLE_OBJECTS[type]}`, style);
+            icooler.setInteractive();
+            icooler.on('pointerdown', function (pointer) {
+                document.getElementById('coolerInfo').click();
+            });
             break;
         case ObjectType.TANK:
             itank = context.add.sprite(x, y*16, 'TANK');
             itank.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
             count_texts.tank_text = context.add.text(text_x, itank.y, `Tank: ${AVAILABLE_OBJECTS[type]}`, style);
+            itank.setInteractive();
+                                    itank.on("pointerdown", function (pointer) {
+                                      document
+                                        .getElementById("storageInfo")
+                                        .click();
+                                    });
             break;
         //MISSING: functionblock and functioncal
         default:
