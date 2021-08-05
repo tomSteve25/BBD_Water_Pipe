@@ -448,7 +448,10 @@ class GameScene extends Phaser.Scene {
                 console.log("SIMULATING!!!!!");
                 result = simulate({y: start_y, x: start_x});
                 if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
+                    saveToLocal('L8Complete', 0);
+                    saveToLocal('L8PipesUsed', pipedUsed);
                     this.scene.start('WinScene');
+
                 }else if (result.outcome && !inFunction){
                     function_count = 0;
                     switch (CURRENT_LEVEL) {
@@ -479,10 +482,6 @@ class GameScene extends Phaser.Scene {
                         case 7:
                             saveToLocal('L7Complete', 0);
                             saveToLocal('L7PipesUsed', pipedUsed);
-                            break;
-                        case 8:
-                            saveToLocal('L8Complete', 0);
-                            saveToLocal('L8PipesUsed', pipedUsed);
                             break;
                         default:
                             break;

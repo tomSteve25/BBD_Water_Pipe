@@ -139,7 +139,6 @@ function Results(){
   document.getElementById("L7Pipes").innerHTML = (timestamps[33].Count);
   document.getElementById("L8Pipes").innerHTML = (timestamps[34].Count);
   
-  
 }
 
 function calcTime(date, startIndex) {

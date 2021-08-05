@@ -270,7 +270,7 @@ var LEVELS = {
 	// 		{type:ObjectType.BENDLEFT,quantity:50},
 	// 	]
 	// },
-	"1":{ //Function intro
+	"8":{ //Function intro
 		SOURCE:{y:7,x:3},
 		END:{y:10,x:11},
 		WATER_PURITY_LEVEL:3,
