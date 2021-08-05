@@ -1,7 +1,10 @@
 var grid = create_grid();
+var function_grid;
+var temp_grid;
+var TEMP_CURRENT_LEVEL;
+// var function_grid = create_grid();
 var start_x;
 var start_y;
-
 var tank_sprite;
 
 // timestamps.
@@ -9,6 +12,9 @@ var d;
 var text;
 var timedEvent;
 var lapTime;
+
+//Functions
+var inFunction = false;
 
 function formatTime(seconds) {
     // Minutes
@@ -68,6 +74,7 @@ class GameScene extends Phaser.Scene {
         
         this.load.image('FUNCTIONBLOCK', 'assets/function.png');
         this.load.image('FUNCTIONCALL', 'assets/functioncall.png');
+        this.load.image('SAVE', 'assets/save_icon.png');
         //console.log("GameScene starts");
     }
         
@@ -100,6 +107,20 @@ class GameScene extends Phaser.Scene {
     var binBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET, OFFSET, 'bin').setOrigin(0,0);
     binBtn.setInteractive();
     binBtn.setScale(0.05);
+
+    //Function button
+    var functionBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'FUNCTIONCALL').setOrigin(0,0);
+    functionBtn.setInteractive();
+    functionBtn.setScale(0.3);
+
+    var saveBtn;
+
+  
+
+    // var saveBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'SAVE').setOrigin(0,0);
+    // saveBtn.setInteractive();
+    // saveBtn.setScale(0.3);
+    // saveBtn.setVisible(false);
 
     //How to
     var howTo = this.add.image(0, 0, 'HowTo').setOrigin(0,0).setVisible(false);
@@ -238,12 +259,60 @@ class GameScene extends Phaser.Scene {
             howTo.disableInteractive();
             howTo.setVisible(false);
         }
+        else if (gameObject.texture.key === 'FUNCTIONCALL') {
+            // console.log(functionBtn);
+            // functionBtn.destroy();
+            // saveBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'SAVE').setOrigin(0,0);
+            // saveBtn.setInteractive();
+            // saveBtn.setScale(0.3);
+
+            inFunction = !inFunction;
+            
+            if(inFunction){
+                functionBtn.setTexture("FUNCTIONCALL");
+                console.log("Function call: true");
+                temp_grid = grid;
+                grid = create_grid();
+
+                TEMP_CURRENT_LEVEL = CURRENT_LEVEL;
+                CURRENT_LEVEL = "Function";
+
+                this.registry.destroy(); // TODO somehow save registry?
+                this.events.off(); // disable all active events why?
+                this.scene.restart('GameScene'); 
+            } 
+            else {
+                functionBtn.setTexture("SAVE");
+                console.log("Function call: false");
+
+                //SAVE FUNCTION GRID
+                function_grid = grid;
+
+                // Revert to level
+                CURRENT_LEVEL = TEMP_CURRENT_LEVEL;
+                grid = temp_grid;
+                
+                // TODO update amount values
+                
+                // TODO play around with these
+                this.registry.destroy(); // destroy registry
+                this.events.off(); // disable all active events
+                this.scene.restart('GameScene'); // restart current scene
+            }
+            
+            
+        }
+        // else if (gameObject.texture.key === 'SAVE'){
+        //     saveBtn.destroy();
+        //     functionBtn = this.add.image(RIGHTEDGE-CELL_WIDTH*3-OFFSET*3.5, OFFSET-2, 'FUNCTIONCALL').setOrigin(0,0);
+        //     functionBtn.setInteractive();
+        //     functionBtn.setScale(0.3);
+        // }
         else if (gameObject.texture.key === 'run'){
             let result = simulate(grid, {y: start_y, x: start_x});
             if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
             this.scene.start('WinScene');
-            }else if (result.outcome){
-
+            }else if (result.outcome && !inFunction){
                 switch (CURRENT_LEVEL) {
 
                     case 0:
@@ -330,6 +399,7 @@ function create_grid(){
     //NOTE: grid[y][x] - WHY?????????
     return grid;
 }
+
 
 
 function create_sprites(context, number, type) {
@@ -518,26 +588,36 @@ function getImageID(type){
 
 function generateLevel(context, current_level){
     
-    var current_level_str = current_level + 1 + "";
+    var current_level_str = current_level + "";
 
     //var numLevels = LEVELS.numberOFLevels;
     var source_pos = LEVELS[current_level_str].SOURCE;
     var end_pos = LEVELS[current_level_str].END;
     var end2_pos = LEVELS[current_level_str].END2;
     var immovables = LEVELS[current_level_str].IMMOVABLES;
-    var movables = LEVELS[current_level_str].MOVABLES;
+    
+    if (current_level_str == "Function") {
+        console.log(String(TEMP_CURRENT_LEVEL))
+        movables = LEVELS[String(TEMP_CURRENT_LEVEL)].MOVABLES; 
+
+        for (var i=0; i < movables.length; i++) {
+            console.log(movables[i].quantity);
+        }
+    } else {
+        var movables = LEVELS[current_level_str].MOVABLES;
+    }
 
     for (var i = 0; i < movables.length; i++){
-        var key = LEVELS[current_level_str].MOVABLES[i].type;
-        AVAILABLE_OBJECTS[key] = LEVELS[current_level_str].MOVABLES[i].quantity;
+        var key = movables[i].type;
+        AVAILABLE_OBJECTS[key] = movables[i].quantity;
     } 
 
     var brick_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'BRICK');
     
-    var level_str_ = (1+CURRENT_LEVEL) + '';
+    var level_str_ = (CURRENT_LEVEL) + '';
     var water_purity_current_level = LEVELS[level_str_].WATER_PURITY_LEVEL;
 
-    var phase_str_ = (1+CURRENT_LEVEL) + '';
+    var phase_str_ = (CURRENT_LEVEL) + '';
     if(LEVELS[phase_str_].WATER_PHASE_LEVEL == WaterPhase.WATER){
         var water_img = context.add.image((source_pos.x)*CELL_WIDTH, (source_pos.y+2)*CELL_WIDTH, 'WATER');
         water_img.setScale(0.04);

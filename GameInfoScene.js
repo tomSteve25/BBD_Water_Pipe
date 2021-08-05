@@ -74,6 +74,7 @@ var level_purity;
 var simulate_outcome;
 var ifurnace;
 var icooler;
+var itank;
 
 function update_text(simulate_outcome_){
     simulate_outcome = simulate_outcome_;
@@ -126,6 +127,10 @@ function update_text(simulate_outcome_){
         count_texts.cooler_text.destroy();
         var icoolery = icooler.y;
         count_texts.cooler_text = infocontext.add.text(text_x, icoolery, `Cooler: ${AVAILABLE_OBJECTS[ObjectType.COOLER]}`, style);}
+    if (itank) {
+        count_texts.tank_text.destroy();
+        var itanky = itank.y;
+        count_texts.tank_text = infocontext.add.text(text_x, itanky, `Tank: ${AVAILABLE_OBJECTS[ObjectType.COOLER]}`, style);}
         // if (purity_text){
     //     console.log("UPDATED!!!!!!!!!!!!!")
     //     if (simulate_outcome.outcome === undefined){
@@ -154,80 +159,61 @@ function create_sprites_info_icons(context, number, type) {
     
     switch (type) {
         case ObjectType.PIPE:
-            for (var i = 0; i < number; i++){
-                ipipe = context.add.sprite(x, y, 'PIPE').setInteractive(); // wasnt interactive
-                context.input.setDraggable(ipipe); // breaks it
-                ipipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-            }
-            // was in the for loop
+            ipipe = context.add.sprite(x, y, 'PIPE'); // wasnt interactive
+            ipipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
             count_texts.pipe_text = context.add.text(text_x, ipipe.y, `Straight: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.BENDLEFT:
-            for (var i = 0; i < number; i++){
-                ibend_left = context.add.sprite(x, y*2.5, 'BENDLEFT').setInteractive();
-                context.input.setDraggable(ibend_left); // newly added
-                ibend_left.angle += 180;
-                ibend_left.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-            }
+            ibend_left = context.add.sprite(x, y*2.5, 'BENDLEFT');
+            ibend_left.angle += 180;
+            ibend_left.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
             count_texts.bendleft_text = context.add.text(text_x, ibend_left.y, `Left bend: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.BENDRIGHT:
-            for (var i = 0; i < number; i++){
-                ibend_right = context.add.sprite(x, y*4, 'BENDRIGHT').setInteractive();
-                context.input.setDraggable(ibend_right); // newly added
-                ibend_right.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.bendright_text = context.add.text(text_x, ibend_right.y, `Right bend: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
+            ibend_right = context.add.sprite(x, y*4, 'BENDRIGHT');
+            ibend_right.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.bendright_text = context.add.text(text_x, ibend_right.y, `Right bend: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.CHECKPIPE:
-            for (var i = 0; i < number; i++){
-                icheck_pipe = context.add.sprite(x, y*5.5, 'CHECKPIPE');
-                icheck_pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.checkpipe_text = context.add.text(text_x, icheck_pipe.y, `Separator: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
+            icheck_pipe = context.add.sprite(x, y*5.5, 'CHECKPIPE');
+            icheck_pipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.checkpipe_text = context.add.text(text_x, icheck_pipe.y, `Separator: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.DOUBLEDUAL:
-            for (var i = 0; i < number; i++){
-                idouble_pipe_dual = context.add.sprite(x, y*7, 'DOUBLEDUAL');
-                idouble_pipe_dual.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.doubledual_text = context.add.text(text_x, idouble_pipe_dual.y, `Left-Right double: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
+            idouble_pipe_dual = context.add.sprite(x, y*7, 'DOUBLEDUAL');
+            idouble_pipe_dual.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.doubledual_text = context.add.text(text_x, idouble_pipe_dual.y, `Left-Right double: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.DOUBLELEFT:
-            for (var i = 0; i < number; i++){
-                idouble_pipe_left = context.add.sprite(x, y*8.5, 'DOUBLELEFT');
-                idouble_pipe_left.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.doubleleft_text = context.add.text(text_x, idouble_pipe_left.y, `Left double: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
+            idouble_pipe_left = context.add.sprite(x, y*8.5, 'DOUBLELEFT');
+            idouble_pipe_left.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.doubleleft_text = context.add.text(text_x, idouble_pipe_left.y, `Left double: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.DOUBLERIGHT:
-            for (var i = 0; i < number; i++){
-                idouble_pipe_right = context.add.sprite(x, y*10, 'DOUBLERIGHT');
-                idouble_pipe_right.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.doubleright_text = context.add.text(text_x, idouble_pipe_right.y, `Right double: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
+            idouble_pipe_right = context.add.sprite(x, y*10, 'DOUBLERIGHT');
+            idouble_pipe_right.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.doubleright_text = context.add.text(text_x, idouble_pipe_right.y, `Right double: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.PURIFIER:
-            for (var i = 0; i < number; i++){
-                ipurifier = context.add.sprite(x, y*11.5, 'PURIFIER');
-                ipurifier.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.purifier_text = context.add.text(text_x, ipurifier.y, `Filter: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
+            ipurifier = context.add.sprite(x, y*11.5, 'PURIFIER');
+            ipurifier.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.purifier_text = context.add.text(text_x, ipurifier.y, `Filter: ${AVAILABLE_OBJECTS[type]}`, style);
             break;
         case ObjectType.FURNACE:
-            for (var i = 0; i < number; i++){
-                ifurnace = context.add.sprite(x, y*13, 'FURNACE');
-                ifurnace.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.furnace_text = context.add.text(text_x, ifurnace.y, `Heater: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
+            ifurnace = context.add.sprite(x, y*13, 'FURNACE');
+            ifurnace.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.furnace_text = context.add.text(text_x, ifurnace.y, `Heater: ${AVAILABLE_OBJECTS[type]}`, style);
         break;
         case ObjectType.COOLER:
-            for (var i = 0; i < number; i++){
-                icooler = context.add.sprite(x, y*14.5, 'COOLER');
-                icooler.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
-                count_texts.cooler_text = context.add.text(text_x, icooler.y, `Cooler: ${AVAILABLE_OBJECTS[type]}`, style);
-            }
-        break;
+            icooler = context.add.sprite(x, y*14.5, 'COOLER');
+            icooler.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.cooler_text = context.add.text(text_x, icooler.y, `Cooler: ${AVAILABLE_OBJECTS[type]}`, style);
+            break;
+        case ObjectType.TANK:
+            itank = context.add.sprite(x, y*16, 'TANK');
+            itank.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            count_texts.tank_text = context.add.text(text_x, itank.y, `Tank: ${AVAILABLE_OBJECTS[type]}`, style);
+            break;
         //MISSING: functionblock and functioncal
         default:
             console.log("INSIDE FUNCTION DEFAULT");

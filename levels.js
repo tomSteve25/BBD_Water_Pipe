@@ -19,7 +19,31 @@ const ObjectType = {
 var LEVELS = {
 	numberOFLevels:14,
 
-	"1":{ //Tank
+	"1":{ //Test
+		SOURCE:{y:7,x:3},
+		END:{y:10,x:11},
+		WATER_PURITY_LEVEL:3,
+		WATER_PHASE_LEVEL:1,
+		IMMOVABLES:[
+			
+		],
+		blueprint: true,
+		MOVABLES:[
+			{type:ObjectType.PURIFIER,quantity:3},
+			{type:ObjectType.PIPE,quantity:10},
+			{type:ObjectType.BENDRIGHT,quantity:6},
+			{type:ObjectType.BENDLEFT,quantity:6},
+			{type:ObjectType.DOUBLELEFT,quantity:3},
+			{type:ObjectType.DOUBLERIGHT,quantity:3},
+			{type:ObjectType.DOUBLEDUAL,quantity:3},
+			{type:ObjectType.FURNACE,quantity:3},
+			{type:ObjectType.COOLER,quantity:3},
+			{type:ObjectType.TANK,quantity:1},
+			{type:ObjectType.CHECKPIPE, quantity:5}
+		]
+	},
+
+	"15":{ //Tank
 		SOURCE:{y:6,x:4},
 		END:{y:6,x:10},
 		WATER_PURITY_LEVEL:0,
@@ -31,7 +55,7 @@ var LEVELS = {
 		]
 	},
 	
-	"14":{ //Water goes down
+	"111":{ //Water goes down
 		SOURCE:{y:3,x:3},
 		END:{y:6,x:6},
 		WATER_PURITY_LEVEL:0,
@@ -238,7 +262,15 @@ var LEVELS = {
 			{type:ObjectType.BENDRIGHT,quantity:50},
 			{type:ObjectType.BENDLEFT,quantity:50},
 		]
-	}
+	},
+	"Function":{ //function grid
+		SOURCE:{y:7,x:5},
+		END:{y:10,x:10},
+		WATER_PURITY_LEVEL:0,
+		WATER_PHASE_LEVEL:1,
+		IMMOVABLES:[],
+		MOVABLES:[]
+	},
 	// "10":{ //Basic level
 	// 	SOURCE:{y:3,x:3},
 	// 	END:{y:6,x:6},

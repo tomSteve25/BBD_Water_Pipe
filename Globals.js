@@ -1,4 +1,4 @@
-var CURRENT_LEVEL = 0;
+var CURRENT_LEVEL = 1;
 var AVAILABLE_OBJECTS = {};
 
 var count_texts = {
