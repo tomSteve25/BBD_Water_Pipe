@@ -448,7 +448,7 @@ class GameScene extends Phaser.Scene {
                 console.log("SIMULATING!!!!!");
                 result = simulate({y: start_y, x: start_x});
                 if (result.outcome && CURRENT_LEVEL === LEVELS.numberOFLevels-1){
-                this.scene.start('WinScene');
+                    this.scene.start('WinScene');
                 }else if (result.outcome && !inFunction){
                     function_count = 0;
                     switch (CURRENT_LEVEL) {

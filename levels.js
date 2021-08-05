@@ -281,7 +281,15 @@ var LEVELS = {
 			{type:ObjectType.PIPE,quantity:10},
 			{type:ObjectType.BENDRIGHT,quantity:10},
 			{type:ObjectType.BENDLEFT,quantity:10},
-			{type:ObjectType.FUNCTIONBLOCK,quantity:10}
+			{type:ObjectType.FUNCTIONBLOCK,quantity:1},
+			{type:ObjectType.PURIFIER,quantity:0},
+			{type:ObjectType.FURNACE,quantity:0},
+			{type:ObjectType.COOLER,quantity:0},
+			{type:ObjectType.DOUBLERIGHT,quantity:0},
+			{type:ObjectType.DOUBLELEFT,quantity:0},
+			{type:ObjectType.DOUBLEDUAL,quantity:0},
+			{type:ObjectType.CHECKPIPE,quantity:0},
+			{type:ObjectType.TANK,quantity:0}
 		]
 	},
 	"Function":{ //function grid
