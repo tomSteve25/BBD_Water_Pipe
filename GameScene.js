@@ -137,6 +137,22 @@ class GameScene extends Phaser.Scene {
         previous_position = [gameObject.x, gameObject.y];
         previous_x = (gameObject.x/CELL_WIDTH)-1;
         previous_y = (gameObject.y/CELL_WIDTH)-1;
+        console.log(getKind(gameObject));
+        console.log("x:" + previous_x);
+        console.log("y:" + previous_y);
+        console.log(ObjectType.FUNCTIONBLOCK);
+        if(getKind(gameObject) === ObjectType.FUNCTIONBLOCK && previous_y != 0){
+            console.log("HELLO");
+            grid[previous_y-1][previous_x] = null;
+            grid[previous_y-1][previous_x+1] = null;
+            grid[previous_y+1][previous_x] = null;
+            grid[previous_y+1][previous_x+1] = null;
+            grid[previous_y][previous_x+1] = null;
+            grid[previous_y][previous_x-1] = null;
+            grid[previous_y+1][previous_x-1] = null;
+            grid[previous_y-1][previous_x-1] = null;
+        }
+
         gameObject.angle += 90;
         grid[previous_y][previous_x] = null;
         
@@ -226,7 +242,20 @@ class GameScene extends Phaser.Scene {
         }else{ // placeable grid location
             //sets the new grid position as true (i.e. occupied)
             grid[y][x] = new GameEntity(kind, 1, 1, direction, {y: y, x: x});
-            
+            console.log("y  : " + y);
+            console.log("x: " + x);
+            console.log(kind);
+            if(kind === ObjectType.FUNCTIONBLOCK){ //TODO figure out wtf is happening
+                console.log("FUntionssss");
+                grid[y-1][x] = -1;
+                grid[y-1][x+1] = -1;
+                grid[y+1][x] = -1;
+                grid[y+1][x+1] = -1;
+                grid[y][x+1] = -1;
+                grid[y][x-1] = -1;
+                grid[y+1][x-1] = -1;
+                grid[y-1][x-1] = -1;
+            }
             if (previous_y === 0){
                 AVAILABLE_OBJECTS[kind] -= 1;
                 pipedUsed +=1;
@@ -289,8 +318,8 @@ class GameScene extends Phaser.Scene {
             else {
                 let result = simulate(grid, {y: start_y, x: start_x});
 
-                // if (result.outcome) {
-                if (true) {
+                if (result.outcome) {
+                // if (true) {
 
                     functionBtn.setTexture("SAVE");
                     console.log("Function call: false");
@@ -549,7 +578,12 @@ function create_sprites(context, number, type) {
                 tank_sprite = tank;
             }
             break;
-        //MISSING: functionblock and functioncal
+        case ObjectType.FUNCTIONBLOCK:
+            var functionblock = context.add.sprite(CELL_WIDTH*12, CELL_WIDTH, 'FUNCTIONBLOCK').setInteractive();
+            functionblock.anchor.x = 
+            context.input.setDraggable(functionblock);
+            functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+            break;
         default:
           // code block
     }
@@ -748,6 +782,12 @@ function generateLevel(context, current_level){
                         context.input.setDraggable(checkpipe);
                         checkpipe.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
                         break;
+                    case ObjectType.FUNCTIONBLOCK:
+                        var functionblock = context.add.sprite(CELL_WIDTH*(j+1), CELL_WIDTH*(i+1), 'FUNCTIONBLOCK').setInteractive();
+                        
+                        context.input.setDraggable(functionblock);
+                        functionblock.setScale(0.35); // resize the pipe to be the same height as a cell on the grid
+                        break;
                     default:
                         break;
                 }
@@ -765,11 +805,14 @@ function generateLevel(context, current_level){
     var start_kind = getKind(start);
     var start_direction = getDirection(start.angle);
     grid[start_y][start_x] = new GameEntity(start_kind, LEVELS[current_level_str].WATER_PURITY_LEVEL, LEVELS[current_level_str].WATER_PHASE_LEVEL, start_direction, {y: start_y, x: start_x});
-    grid[start_y+1][start_x] = -1;
-    grid[start_y-1][start_x] = -1;
     grid[start_y][start_x-1] = -1;
+    grid[start_y][start_x-2] = -1;
+    grid[start_y+1][start_x] = -1;
     grid[start_y+1][start_x-1] = -1;
-    grid[start_y-1][start_x-1] = -1;
+    grid[start_y+1][start_x-2] = -1;
+    grid[start_y+2][start_x] = -1;
+    grid[start_y+2][start_x-1] = -1;
+    grid[start_y+2][start_x-2] = -1;
 
     
 

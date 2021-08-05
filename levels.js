@@ -39,7 +39,8 @@ var LEVELS = {
 			{type:ObjectType.FURNACE,quantity:3},
 			{type:ObjectType.COOLER,quantity:3},
 			{type:ObjectType.TANK,quantity:1},
-			{type:ObjectType.CHECKPIPE, quantity:5}
+			{type:ObjectType.CHECKPIPE, quantity:5},
+			{type:ObjectType.FUNCTIONBLOCK, quantity:1}
 		]
 	},
 
