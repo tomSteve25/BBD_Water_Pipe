@@ -2,19 +2,135 @@
 <html>
 <head>
     <title>My Phaser Game</title>
+
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
     <script src="phaser.min.js"></script>
     <script src="waterPassage.js"></script>
     <script src="levels.js"></script>
     <script src="Globals.js"></script>
     <script src="MainMenuScene.js"></script>
-    <script src="SplashScene.js"></script>
+    <script src="SplashScene.js"  ></script>
     <script src="GameScene.js"></script>
     <script src="GameInfoScene.js"></script>
     <script src="WinScene.js"></script>
     <script src="main.js"></script>
     <script src="SaveInterface.js"></script>
+
+    
+    <link rel="stylesheet">
+
 </head>
 <body>
+    <button type="button" onclick="Results()" style="float: right;" class="button">See Results</button>
+    <div id="Resultpanel" style="float: right;">
+        <h2>Scoring Data:</h2>
+
+        <h3>Total Time:</h3>
+        <p id="TotalTime"></p>
+
+        <h3>Level Results</h3>
+        <h4 >Level 1</h4>
+        Time:
+        <p id="L1Time"></p>
+        Redos:
+        <p id="L1Redos"></p>
+        Pipes Used:
+        <p id="L1Pipes"></p>
+
+        <h4 >Level 2</h4>
+        Time:
+        <p id="L2Time"></p>
+        Redos:
+        <p id="L2Redos"></p>
+        Pipes Used:
+        <p  id="L2Pipes"></p>
+
+        <h4>Level 3</h4>
+        Time:
+        <p id="L3Time"></p>
+        Redos:
+        <p id="L3Redos"></p>
+        Pipes Used:
+        <p id="L3Pipes"></p>
+
+        <h4>Level 4</h4>
+        <p id="L4Time"></p>
+        <p id="L4Redos"></p>
+        <p id="L4Pipes"></p>
+
+        <h4 >Level 5</h4>
+        Time:
+        <p id="L5Time"></p>
+        Redos:
+        <p id="L5Redos"></p>
+        Pipes Used:
+        <p id="L5Pipes"></p>
+
+        <h4>Level 6</h4>
+        Time:
+        <p id="L6Time"></p>
+        Redos:
+        <p id="L6Redos"></p>
+        Pipes Used:
+        <p id="L6Pipes"></p>
+
+        <h4>Level 7</h4>
+        Time:
+        <p id="L7Time"></p>
+        Redos:
+        <p  id="L7Redos"></p>
+        Pipes Used:
+        <p id="L7Pipes"></p>
+    </div>
 </body>
 </html>
+<style>
+
+.button {
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 2px;
+  position: relative;
+  background-color: #000000;
+  border: none;
+  color: #fff;
+  padding: 20px;
+  width: 100px;
+  text-align: center;
+  transition-duration: 0.4s;
+  overflow: hidden;
+  box-shadow: 0 5px 15p #e5ffaa;
+  border-radius: 4px;
+}
+
+.button:hover {
+  background: #fff;
+  box-shadow: 0px 2px 10px 5px #1abc9c;
+  color: #000;
+}
+
+.button:after {
+  content: "";
+  background: #1abc9c;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.button:focus { outline:0; }
+
+</style>
