@@ -26,7 +26,6 @@ window.addEventListener('load', (event) => {
     };
     
     var game = new Phaser.Game(config); 
-    Results();
      
   });
   console.log('third log');
